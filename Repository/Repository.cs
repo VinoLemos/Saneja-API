@@ -6,7 +6,7 @@ namespace Projeto_SaneJa.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-               protected AppDbContext _context;
+        protected AppDbContext _context;
         public Repository(AppDbContext context)
         {
             _context = context;
@@ -23,7 +23,7 @@ namespace Projeto_SaneJa.Repository
 
         public IQueryable<T> Get()
         {
-           return _context.Set<T>().AsNoTracking();
+            return _context.Set<T>().AsNoTracking();
         }
 
         public T GetById(Expression<Func<T, bool>> predicate)
@@ -31,6 +31,10 @@ namespace Projeto_SaneJa.Repository
             return _context.Set<T>().SingleOrDefault(predicate);
         }
         public T GetByEmail(Expression<Func<T, bool>> predicate)
+        {
+            return _context.Set<T>().SingleOrDefault(predicate);
+        }
+        public T GetByRgi(Expression<Func<T, bool>> predicate)
         {
             return _context.Set<T>().SingleOrDefault(predicate);
         }

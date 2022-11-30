@@ -7,6 +7,7 @@ namespace Projeto_SaneJa.Repository
         IQueryable<T> Get();
         T GetById(Expression<Func<T, bool>> predicate);
         T GetByEmail(Expression<Func<T, bool>> predicate);
+        T GetByRgi(Expression<Func<T, bool>> predicate);
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);

@@ -51,6 +51,22 @@ namespace Projeto_SaneJa.Controllers
             }
         }
 
+        [HttpGet("[action]/{rgi}", Name = "ObterImovelPorEmail")]
+        public ActionResult<ImovelDTO> GetByRgi(string rgi)
+        {
+            try
+            {
+                var imovel = _uof.ImovelRepository?.GetByRgi(i => i.Rgi == rgi );
+                var imovelDTO = _mapper.Map<ImovelDTO>(imovel);
+                return imovelDTO == null ? NotFound("Imóvel não encontrado no sistema.") : imovelDTO;
+            }
+            catch (System.Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                "Ocorreu um erro ao tratar sua solicitação");
+            }
+        }
+
         [HttpPost]
         public ActionResult Post([FromBody]ImovelDTO imovelDto)
         {
