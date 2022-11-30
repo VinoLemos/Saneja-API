@@ -38,6 +38,10 @@ namespace Projeto_SaneJa.Repository
         {
             return _context.Set<T>().SingleOrDefault(predicate);
         }
+        public IQueryable<T> GetByCpf(Expression<Func<T, bool>> predicate)
+        {
+            return _context.Set<T>().AsNoTracking();
+        }
         public void Update(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
