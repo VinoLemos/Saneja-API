@@ -56,7 +56,7 @@ namespace Projeto_SaneJa.Controllers
         {
             try
             {
-                var imovel = _uof.ImovelRepository?.GetByRgi(i => i.Rgi == rgi );
+                var imovel = _uof.ImovelRepository?.GetByRgi(i => i.Rgi == rgi);
                 var imovelDTO = _mapper.Map<ImovelDTO>(imovel);
                 return imovelDTO == null ? NotFound("Imóvel não encontrado no sistema.") : imovelDTO;
             }
@@ -67,8 +67,34 @@ namespace Projeto_SaneJa.Controllers
             }
         }
 
+        [HttpGet("[action]/{cpf}", Name = "ObterImovelPorCpf")]
+        public ActionResult<IEnumerable<ImovelDTO>> GetByCpf(string cpf)
+        {
+            try
+            {
+                if(cpf.Length < 11  || cpf.Length > 11 || cpf.Length == 0) {return BadRequest("CPF inválido");}
+                var imoveisBusca = _uof.ImovelRepository.Get().ToList();
+                var imoveis = new List<Imovel>();
+                foreach (Imovel i in imoveisBusca)
+                {   
+                    if (i.CpfProprietario == cpf)
+                    {
+                        imoveis.Add(i);
+                    }
+                }
+
+                var imoveisDto = _mapper.Map<List<ImovelDTO>>(imoveis);
+                return imoveisDto == null ? NotFound("Não foram encontrados imoveis") : imoveisDto;
+            }
+            catch (System.Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                "Ocorreu um erro ao tratar sua solicitação");
+            }
+        }
+
         [HttpPost]
-        public ActionResult Post([FromBody]ImovelDTO imovelDto)
+        public ActionResult Post([FromBody] ImovelDTO imovelDto)
         {
             try
             {
@@ -90,11 +116,11 @@ namespace Projeto_SaneJa.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult Put(int id, [FromBody]ImovelDTO imovelDto)
+        public ActionResult Put(int id, [FromBody] ImovelDTO imovelDto)
         {
             try
             {
-                if ( id != imovelDto.ID) return BadRequest();
+                if (id != imovelDto.ID) return BadRequest();
 
                 var imovel = _mapper.Map<Imovel>(imovelDto);
 
