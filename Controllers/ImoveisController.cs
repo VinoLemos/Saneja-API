@@ -72,11 +72,16 @@ namespace Projeto_SaneJa.Controllers
         {
             try
             {
-                if(cpf.Length < 11  || cpf.Length > 11 || cpf.Length == 0) {return BadRequest("CPF inválido");}
+                if (cpf.Length != 11)
+                {
+                    return BadRequest("CPF inválido");
+                }
+
                 var imoveisBusca = _uof.ImovelRepository.Get().ToList();
                 var imoveis = new List<Imovel>();
+                
                 foreach (Imovel i in imoveisBusca)
-                {   
+                {
                     if (i.CpfProprietario == cpf)
                     {
                         imoveis.Add(i);
