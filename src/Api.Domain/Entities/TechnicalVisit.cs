@@ -8,7 +8,9 @@ namespace Api.Domain.Entities
     public class TechnicalVisit : BaseEntity
     {
         public int ResidencialPropertyId { get; set; }
+        public ResidencialProperty ResidencialProperty { get; set; }
         public int AgentId { get; set; }
+        public Agent Agent { get; set; }
         public VisitStatus Status { get; set; }
         private DateTime _requestDate;
         public DateTime RequestDate

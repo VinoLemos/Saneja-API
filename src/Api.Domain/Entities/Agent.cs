@@ -7,5 +7,6 @@ namespace Api.Domain.Entities
 {
     public class Agent : BaseUser
     {
+        public List<TechnicalVisit> Visits { get; set; }
     }
 }

@@ -16,5 +16,6 @@ namespace Api.Domain.Entities
         public int Rgi { get; set; }
         public int Hidrometer { get; set; }
         public int PersonId { get; set; }
+        public Person Person { get; set; }
     }
 }
