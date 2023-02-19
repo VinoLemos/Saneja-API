@@ -1,18 +1,17 @@
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Api.Domain.Entities
 {
-    public abstract class BaseUser
+    public abstract class BaseUser : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-        private DateTime? _createdAt;
-        public DateTime? CreatedAt
-        {
-            get { return _createdAt; }
-            set { _createdAt = value == null ? DateTime.Now : value; }
-        }
-
-        public DateTime? UpdatedAt { get; set; }
+        public string Name { get; set; }
+        public string Rg { get; set; }
+        public long Cpf { get; set; }
+        public DateTime Birthday { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
     }
 }
