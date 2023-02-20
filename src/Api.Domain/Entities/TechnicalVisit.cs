@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,10 +8,12 @@ namespace Api.Domain.Entities
 {
     public class TechnicalVisit : BaseEntity
     {
-        public int ResidencialPropertyId { get; set; }
-        public ResidencialProperty ResidencialProperty { get; set; }
-        public int AgentId { get; set; }
-        public Agent Agent { get; set; }
+        [ForeignKey("ResidencialProperty")]
+        public Guid ResidencialPropertyId { get; set; }
+        public virtual ResidencialProperty ResidencialProperty { get; set; }
+        [ForeignKey("Agent")]
+        public Guid AgentId { get; set; }
+        public virtual Agent Agent { get; set; }
         public VisitStatus Status { get; set; }
         private DateTime _requestDate;
         public DateTime RequestDate

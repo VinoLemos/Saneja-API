@@ -7,6 +7,6 @@ namespace Api.Domain.Entities
 {
     public class Person : BaseUser
     {
-        public List<ResidencialProperty> ResidencialProperties { get; set; }
+        public virtual List<ResidencialProperty> ResidencialProperties { get; set; }
     }
 }

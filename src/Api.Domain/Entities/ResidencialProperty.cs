@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,8 @@ namespace Api.Domain.Entities
         public string City { get; set; }
         public int Rgi { get; set; }
         public int Hidrometer { get; set; }
-        public int PersonId { get; set; }
-        public Person Person { get; set; }
+        [ForeignKey("Person")]
+        public Guid PersonId { get; set; }
+        public virtual Person Person { get; set; }
     }
 }
