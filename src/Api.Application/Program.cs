@@ -1,4 +1,15 @@
 using Api.Data.Context;
+using Api.Data.Repository;
+using Api.Domain.Entities;
+using Api.Domain.Interfaces;
+using Api.Domain.Interfaces.Services.AgentServices;
+using Api.Domain.Interfaces.Services.PersonServices;
+using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
+using Api.Domain.Interfaces.Services.TechnicalVisitServices;
+using Api.Service.Services.AgentServices;
+using Api.Service.Services.PersonServices;
+using Api.Service.Services.ResidencialPropertyServices;
+using Api.Service.Services.TechnicalVisitServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +25,11 @@ builder.Services.AddDbContext<MyContext>(options =>
         options.UseMySql(mySqlConnection,
             ServerVersion.AutoDetect(mySqlConnection),
             b => b.MigrationsAssembly("application")));
-
+builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+builder.Services.AddTransient<IPersonService, PersonService>();
+builder.Services.AddTransient<IAgentServices, AgentService>();
+builder.Services.AddTransient<IResidencialPropertyServices, ResidencialPropertyService>();
+builder.Services.AddTransient<ITechnicalVisitServices, TechnicalVisitService>();
 
 var app = builder.Build();
 
