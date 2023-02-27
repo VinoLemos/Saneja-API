@@ -9,11 +9,11 @@ using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
 
 namespace Api.Service.Services.ResidencialPropertyServices
 {
-    public class ResidencialPropertyService : IResidencialPropertyServices
+    public class ResidentialPropertyService : IResidentialPropertyService
     {
-        private readonly IRepository<ResidencialProperty> _repository;
+        private readonly IRepository<ResidentialProperty> _repository;
 
-        public ResidencialPropertyService(IRepository<ResidencialProperty> repository)
+        public ResidentialPropertyService(IRepository<ResidentialProperty> repository)
         {
             _repository = repository;
         }
@@ -23,24 +23,24 @@ namespace Api.Service.Services.ResidencialPropertyServices
             return await _repository.ExistsAsync(id);
         }
 
-        public async Task<ResidencialProperty> Get(Guid id)
+        public async Task<ResidentialProperty> Get(Guid id)
         {
             return await _repository.SelectAsync(id);
         }
 
-        public async Task<IEnumerable<ResidencialProperty>> GetAll()
+        public async Task<IEnumerable<ResidentialProperty>> GetAll()
         {
             return await _repository.SelectAsync();
         }
 
-        public async Task<ResidencialProperty> Post(ResidencialProperty residencialProperty)
+        public async Task<ResidentialProperty> Post(ResidentialProperty residentialProperty)
         {
-            return await _repository.InsertAsync(residencialProperty);
+            return await _repository.InsertAsync(residentialProperty);
         }
 
-        public async Task<ResidencialProperty> Put(ResidencialProperty residencialProperty)
+        public async Task<ResidentialProperty> Put(ResidentialProperty residentialProperty)
         {
-            return await _repository.UpdateAsync(residencialProperty);
+            return await _repository.UpdateAsync(residentialProperty);
         }
         public async Task<bool> Delete(Guid id)
         {

@@ -8,7 +8,7 @@ using Api.Domain.Interfaces.Services.TechnicalVisitServices;
 
 namespace Api.Service.Services.TechnicalVisitServices
 {
-    public class TechnicalVisitService : ITechnicalVisitServices
+    public class TechnicalVisitService : ITechnicalVisitService
     {
         private readonly IRepository<TechnicalVisit> _repository;
 

@@ -10,7 +10,7 @@ namespace Api.Domain.Entities
     {
         [ForeignKey("ResidencialProperty")]
         public Guid ResidencialPropertyId { get; set; }
-        public virtual ResidencialProperty ResidencialProperty { get; set; }
+        public virtual ResidentialProperty ResidencialProperty { get; set; }
         [ForeignKey("Agent")]
         public Guid AgentId { get; set; }
         public virtual Agent Agent { get; set; }

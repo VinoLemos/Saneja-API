@@ -8,7 +8,7 @@ using Api.Domain.Interfaces.Services.AgentServices;
 
 namespace Api.Service.Services.AgentServices
 {
-    public class AgentService : IAgentServices
+    public class AgentService : IAgentService
     {
         private readonly IRepository<Agent> _repository;
 

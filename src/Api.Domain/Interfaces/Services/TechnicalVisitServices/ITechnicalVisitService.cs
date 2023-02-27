@@ -6,7 +6,7 @@ using Api.Domain.Entities;
 
 namespace Api.Domain.Interfaces.Services.TechnicalVisitServices
 {
-    public interface ITechnicalVisitServices
+    public interface ITechnicalVisitService
     {
         Task<TechnicalVisit> Get(Guid id);
         Task<bool> Exists(Guid id);

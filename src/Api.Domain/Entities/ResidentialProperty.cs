@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Api.Domain.Entities
 {
-    public class ResidencialProperty : BaseEntity
+    public class ResidentialProperty : BaseEntity
     {
         public string Street { get; set; }
         public int? Number { get; set; }

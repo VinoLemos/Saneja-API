@@ -1,3 +1,4 @@
+using Api.CrossCutting.DependencyInjection;
 using Api.Data.Context;
 using Api.Data.Repository;
 using Api.Domain.Entities;
@@ -25,11 +26,9 @@ builder.Services.AddDbContext<MyContext>(options =>
         options.UseMySql(mySqlConnection,
             ServerVersion.AutoDetect(mySqlConnection),
             b => b.MigrationsAssembly("application")));
-builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-builder.Services.AddTransient<IPersonService, PersonService>();
-builder.Services.AddTransient<IAgentServices, AgentService>();
-builder.Services.AddTransient<IResidencialPropertyServices, ResidencialPropertyService>();
-builder.Services.AddTransient<ITechnicalVisitServices, TechnicalVisitService>();
+
+ConfigureService.ConfigureDependenciesService(builder.Services);
+ConfigureRepository.ConfigureDependenciesRepository(builder.Services);
 
 var app = builder.Build();
 

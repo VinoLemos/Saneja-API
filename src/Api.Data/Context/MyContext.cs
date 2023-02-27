@@ -12,7 +12,7 @@ namespace Api.Data.Context
     {
         public DbSet<Person> Person { get; set; }
         public DbSet<Agent> Agents { get; set; }
-        public DbSet<ResidencialProperty> ResidencialProperties { get; set; }
+        public DbSet<ResidentialProperty> ResidencialProperties { get; set; }
         public DbSet<TechnicalVisit> TechnicalVisits { get; set; }
 
         public MyContext()
@@ -29,7 +29,7 @@ namespace Api.Data.Context
             base.OnModelCreating (modelBuilder);
             modelBuilder.Entity<Person>(new PersonMap().Configure);
             modelBuilder.Entity<Agent>(new AgentMap().Configure);
-            modelBuilder.Entity<ResidencialProperty>(new ResidencialPropertyMap().Configure);
+            modelBuilder.Entity<ResidentialProperty>(new ResidentialPropertyMap().Configure);
             modelBuilder.Entity<TechnicalVisit>(new TechnicalVisitMap().Configure);
         }
     }

@@ -6,7 +6,7 @@ using Api.Domain.Entities;
 
 namespace Api.Domain.Interfaces.Services.AgentServices
 {
-    public interface IAgentServices
+    public interface IAgentService
     {
         Task<Agent> Get(Guid id);
         Task<bool> Exists(Guid id);

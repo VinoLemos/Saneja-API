@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Mappings
 {
-    public class ResidencialPropertyMap : IEntityTypeConfiguration<ResidencialProperty>
+    public class ResidentialPropertyMap : IEntityTypeConfiguration<ResidentialProperty>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ResidencialProperty> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ResidentialProperty> builder)
         {
-            builder.ToTable("Residencial_Property");
+            builder.ToTable("Residential_Property");
 
             builder.HasKey(p => p.Id);
 
