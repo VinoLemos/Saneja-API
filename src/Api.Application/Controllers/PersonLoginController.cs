@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Api.Domain.Dtos;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services;
 using Api.Domain.Interfaces.Services.PersonServices;
@@ -14,7 +15,7 @@ namespace Api.Application.Controllers
     [ApiController]
     public class PersonLoginController : ControllerBase
     {
-        private ILoginService<Person> _service;
+        private readonly ILoginService<Person> _service;
 
         public PersonLoginController(ILoginService<Person> service)
         {
@@ -22,19 +23,19 @@ namespace Api.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Login([FromBody] Person person)
+        public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             
-            if (person == null) return BadRequest("Usuário Inválido");
+            if (login == null) return BadRequest("Usuário Inválido");
 
             try
             {
-                var result = await _service.FindByLogin(person);
+                var result = await _service.FindByLogin(login);
 
                 if (result == null) return NotFound();
 
-                return result;
+                return Ok(result);
             }
             catch (ArgumentException ex)
             {

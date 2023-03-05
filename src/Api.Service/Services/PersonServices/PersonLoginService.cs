@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.Domain.Dtos;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services;
 using Api.Domain.Interfaces.Services.PersonServices;
@@ -11,18 +12,16 @@ namespace Api.Service.Services.PersonServices
 {
     public class PersonLoginService : ILoginService<Person>
     {
-        private IPersonRepository _repository;
+        private readonly IPersonRepository _repository;
 
         public PersonLoginService(IPersonRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<Person> FindByLogin(Person user)
+        public async Task<object> FindByLogin(LoginDto login)
         {
-            var basePerson = new Person();
-            
-            basePerson = await _repository.FindByLogin(user.Email);
+            Person? basePerson = await _repository.FindByLogin(login.Email);
 
             return basePerson ?? throw new SystemException("Usuário não encontrado");
         }

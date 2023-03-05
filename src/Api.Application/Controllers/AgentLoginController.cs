@@ -1,4 +1,5 @@
 using System.Net;
+using Api.Domain.Dtos;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace Api.Application.Controllers
     [ApiController]
     public class AgentLoginController : ControllerBase
     {
-        private ILoginService<Agent> _service;
+        private readonly ILoginService<Agent> _service;
 
         public AgentLoginController(ILoginService<Agent> service)
         {
@@ -17,15 +18,15 @@ namespace Api.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Login([FromBody] Agent person)
+        public async Task<object> Login([FromBody] LoginDto login)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             
-            if (person == null) return BadRequest("Usuário Inválido");
+            if (login == null) return BadRequest("Usuário Inválido");
 
             try
             {
-                var result = await _service.FindByLogin(person);
+                var result = await _service.FindByLogin(login);
 
                 if (result == null) return NotFound();
 

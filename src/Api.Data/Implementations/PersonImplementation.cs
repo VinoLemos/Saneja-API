@@ -12,7 +12,7 @@ namespace Api.Data.Implementations
 {
     public class PersonImplementation : BaseRepository<Person>, IPersonRepository
     {
-        private DbSet<Person> _dataset;
+        private readonly DbSet<Person> _dataset;
 
         public PersonImplementation(MyContext context) : base(context)
         {
