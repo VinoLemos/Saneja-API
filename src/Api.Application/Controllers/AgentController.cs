@@ -1,25 +1,24 @@
-using System.Net;
-using Api.Domain.Interfaces.Services;
-using Api.Domain.Interfaces.Services.PersonServices;
+﻿using Api.Domain.Interfaces.Services.AgentServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
-namespace Api.Application.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PersonController : ControllerBase
+    public class AgentController : ControllerBase
     {
-        const string modelStateError = "Solicitação inválida: ";
+        const string modelStateError = "Solicitação Inválida: ";
 
-        private readonly IPersonService _service;
+        private readonly IAgentService _service;
 
-        public PersonController(IPersonService service)
+        public AgentController(IAgentService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        [Route("get-clients")]
+        [Route("get-agents")]
         public async Task<IActionResult> GetAll()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
@@ -35,14 +34,14 @@ namespace Api.Application.Controllers
         }
 
         [HttpGet]
-        [Route("get-client")]
-        public async Task<IActionResult> Get([FromRoute] Guid personId)
+        [Route("get-agent")]
+        public async Task<IActionResult> Get([FromRoute] Guid agentId)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                return Ok(await _service.Get(personId));
+                return Ok(await _service.Get(agentId));
             }
             catch (ArgumentException e)
             {
@@ -51,14 +50,14 @@ namespace Api.Application.Controllers
         }
 
         [HttpGet]
-        [Route("client-exists")]
-        public async Task<IActionResult> Exists([FromRoute] Guid personId)
+        [Route("agent-exists")]
+        public async Task<IActionResult> Exists([FromRoute] Guid agentId)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                return Ok(await _service.Exists(personId));
+                return Ok(await _service.Exists(agentId));
             }
             catch (ArgumentException e)
             {
