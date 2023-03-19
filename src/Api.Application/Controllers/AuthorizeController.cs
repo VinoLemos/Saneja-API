@@ -10,11 +10,15 @@ namespace Application.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthorizeController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AuthorizeController(UserManager<IdentityUser> userManager,
+                                   SignInManager<IdentityUser> signInManager,
+                                   IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -23,9 +27,9 @@ namespace Application.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> RegisterUser([FromBody]LoginDto login)
+        public async Task<IActionResult> RegisterUser([FromBody] LoginDto login)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
             var user = new IdentityUser

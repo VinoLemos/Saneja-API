@@ -11,12 +11,16 @@ using Api.Service.Services.AgentServices;
 using Api.Service.Services.PersonServices;
 using Api.Service.Services.ResidencialPropertyServices;
 using Api.Service.Services.TechnicalVisitServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 var mySqlConnection = builder.Configuration.GetConnectionString("DevelopmentConnection");
 
 ConfigureService.ConfigureDependenciesService(builder.Services);
@@ -30,6 +34,21 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<MyContext>()
                 .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(
+    JwtBearerDefaults.AuthenticationScheme).
+    AddJwtBearer(options =>
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidAudience = builder.Configuration["TokenConfiguration:Audience"],
+            ValidIssuer = builder.Configuration["TokenConfiguration:Issuer"],
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        });
 
 var app = builder.Build();
 

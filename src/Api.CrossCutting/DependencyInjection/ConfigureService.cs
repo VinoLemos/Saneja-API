@@ -8,7 +8,9 @@ using Api.Service.Services.AgentServices;
 using Api.Service.Services.PersonServices;
 using Api.Service.Services.ResidencialPropertyServices;
 using Api.Service.Services.TechnicalVisitServices;
+using Domain.Interfaces.Services.TokenServices;
 using Microsoft.Extensions.DependencyInjection;
+using Service.Services.TokenServices;
 
 namespace Api.CrossCutting.DependencyInjection
 {
@@ -25,6 +27,8 @@ namespace Api.CrossCutting.DependencyInjection
             services.AddTransient<ITechnicalVisitService, TechnicalVisitService>();
 
             services.AddTransient<IResidentialPropertyService, ResidentialPropertyService>();
+
+            services.AddTransient<IUserTokenService, UserTokenService>();
         }
     }
 }
