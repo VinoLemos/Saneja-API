@@ -24,7 +24,9 @@ namespace Api.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+            var connectionString = "Server=localhost;Database=saneja_api_dev;Uid=root;Pwd=1234";
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+                connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 
             if (!optionsBuilder.IsConfigured) 
                 optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

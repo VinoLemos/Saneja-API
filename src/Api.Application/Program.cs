@@ -17,21 +17,15 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var mySqlConnection = builder.Configuration.GetConnectionString("DevelopmentConnection");
+
+ConfigureService.ConfigureDependenciesService(builder.Services);
+ConfigureRepository.ConfigureDependenciesRepository(builder.Services, mySqlConnection, "application");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddDbContext<MyContext>(options => 
-//        options.UseMySql(mySqlConnection,
-//            ServerVersion.AutoDetect(mySqlConnection),
-//            b => b.MigrationsAssembly("application")));
-
-var mySqlConnection = builder.Configuration.GetConnectionString("ConnectionStrings:DefaultConnection");
-
-ConfigureService.ConfigureDependenciesService(builder.Services);
-ConfigureRepository.ConfigureDependenciesRepository(builder.Services, mySqlConnection, "application");
-
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<MyContext>()
