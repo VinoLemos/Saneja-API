@@ -1,16 +1,5 @@
 using Api.CrossCutting.DependencyInjection;
 using Api.Data.Context;
-using Api.Data.Repository;
-using Api.Domain.Entities;
-using Api.Domain.Interfaces;
-using Api.Domain.Interfaces.Services.AgentServices;
-using Api.Domain.Interfaces.Services.PersonServices;
-using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
-using Api.Domain.Interfaces.Services.TechnicalVisitServices;
-using Api.Service.Services.AgentServices;
-using Api.Service.Services.PersonServices;
-using Api.Service.Services.ResidencialPropertyServices;
-using Api.Service.Services.TechnicalVisitServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -28,7 +28,7 @@ namespace Api.CrossCutting.DependencyInjection
 
             services.AddTransient<IResidentialPropertyService, ResidentialPropertyService>();
 
-            services.AddTransient<IUserTokenService, UserTokenService>();
+            services.AddScoped<UserTokenService>();
         }
     }
 }

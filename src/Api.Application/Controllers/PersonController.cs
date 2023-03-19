@@ -1,10 +1,12 @@
 using System.Net;
 using Api.Domain.Interfaces.Services;
 using Api.Domain.Interfaces.Services.PersonServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Application.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class PersonController : ControllerBase

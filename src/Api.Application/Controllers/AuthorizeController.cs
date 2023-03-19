@@ -1,6 +1,7 @@
 ﻿using Api.Domain.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Service.Services.TokenServices;
 
 namespace Application.Controllers
 {
@@ -11,14 +12,17 @@ namespace Application.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly UserTokenService _userTokenService;
 
         public AuthorizeController(UserManager<IdentityUser> userManager,
                                    SignInManager<IdentityUser> signInManager,
-                                   IConfiguration configuration)
+                                   IConfiguration configuration,
+                                   UserTokenService userTokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _userTokenService = userTokenService;
         }
 
         [HttpGet]
@@ -64,7 +68,7 @@ namespace Application.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok();
+            return Ok(_userTokenService.GenerateToken(login));
         }
     }
 }
