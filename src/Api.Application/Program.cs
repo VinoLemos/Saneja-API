@@ -18,6 +18,8 @@ ConfigureService.ConfigureDependenciesService(builder.Services);
 ConfigureRepository.ConfigureDependenciesRepository(builder.Services, mySqlConnection, "application");
 
 builder.Services.AddControllers();
+
+#region Swagger Configuration
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -61,6 +63,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+#endregion
+
+builder.Services.AddCors();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<MyContext>()
@@ -91,6 +96,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sane Já API");
         c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
     });
 }
@@ -100,6 +106,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyMethod());
 
 app.MapControllers();
 
