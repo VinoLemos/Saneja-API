@@ -1,4 +1,5 @@
 ﻿using Api.Domain.Dtos;
+using Api.Domain.Entities;
 using Domain.Dtos;
 using Domain.Interfaces.Services.TokenServices;
 using Microsoft.Extensions.Configuration;

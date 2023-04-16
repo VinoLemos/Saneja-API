@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Api.Data.Context;
 using Api.Data.Repository;
@@ -25,5 +27,29 @@ namespace Api.Data.Implementations
             ??
             throw new SystemException("Usuário não encontrado");
         }
+
+        public async Task<Agent> UpdateAgentAsync(Agent item)
+        {
+            try
+            {
+                var result = await _dataset.SingleOrDefaultAsync(x => x.Id == item.Id);
+
+                if (result == null) return null;
+
+                result.Name = item.Name ?? result.Name;               
+                result.Email = item.Email ?? result.Email;
+                result.Phone = item.Phone ?? result.Phone;
+
+                _context.Entry(result).CurrentValues.SetValues(item);
+                await _context.SaveChangesAsync();
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

@@ -1,3 +1,4 @@
+using Api.Data.Implementations;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services;
 using Api.Domain.Interfaces.Services.AgentServices;
@@ -8,9 +9,9 @@ using Api.Service.Services.AgentServices;
 using Api.Service.Services.PersonServices;
 using Api.Service.Services.ResidencialPropertyServices;
 using Api.Service.Services.TechnicalVisitServices;
-using Domain.Interfaces.Services.TokenServices;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Services.TokenServices;
+using System.Reflection;
 
 namespace Api.CrossCutting.DependencyInjection
 {
@@ -27,6 +28,9 @@ namespace Api.CrossCutting.DependencyInjection
             services.AddTransient<ITechnicalVisitService, TechnicalVisitService>();
 
             services.AddTransient<IResidentialPropertyService, ResidentialPropertyService>();
+            services.AddTransient<AgentImplementation>();
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped<UserTokenService>();
         }

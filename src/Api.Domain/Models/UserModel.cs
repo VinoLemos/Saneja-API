@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Domain.Models
 {
@@ -32,7 +33,31 @@ namespace Domain.Models
 			set { _email = value; }
 		}
 
-		private DateTime _createAt;
+		private string _phone;
+
+		public string Phone
+		{
+			get { return _phone; }
+			set { _phone = value; }
+		}
+
+		private int _cpf;
+
+		public int Cpf
+		{
+			get { return _cpf; }
+			set { _cpf = value; }
+		}
+
+        private string _rg;
+
+        public string Rg
+        {
+            get { return _rg; }
+            set { _rg = value; }
+        }
+
+        private DateTime _createAt;
 
 		public DateTime CreateAt
 		{
