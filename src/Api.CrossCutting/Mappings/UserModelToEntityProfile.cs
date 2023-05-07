@@ -4,9 +4,9 @@ using Domain.Models;
 
 namespace CrossCutting.Mappings
 {
-    public class ModelToEntityProfile : Profile
+    public class UserModelToEntityProfile : Profile
     {
-        public ModelToEntityProfile()
+        public UserModelToEntityProfile()
         {
             CreateMap<User, UserModel>().ReverseMap();
         }

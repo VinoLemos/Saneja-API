@@ -1,11 +1,8 @@
 using Api.CrossCutting.DependencyInjection;
-using Api.Data.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,13 +64,9 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<MyContext>()
-                .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(
-    JwtBearerDefaults.AuthenticationScheme).
-    AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -83,8 +76,15 @@ builder.Services.AddAuthentication(
             ValidIssuer = builder.Configuration["TokenConfiguration:Issuer"],
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        });
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+
+        // Optional: Configure additional JWT options
+        options.RequireHttpsMetadata = true; // Use HTTPS for metadata endpoint
+        options.SaveToken = true; // Save JWT token in the authentication properties
+        options.TokenValidationParameters.ClockSkew = TimeSpan.Zero; // Disable clock skew
+    });
+
 
 var app = builder.Build();
 

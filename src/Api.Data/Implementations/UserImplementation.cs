@@ -1,34 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Api.Data.Context;
 using Api.Data.Repository;
 using Api.Domain.Entities;
-using Api.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Implementations
 {
-    public class AgentImplementation : BaseRepository<Agent>, IAgentRepository
+    public class UserImplementation : UserRepository<User>
     {
-        private DbSet<Agent> _dataset;
+        private DbSet<User> _dataset;
 
-        public AgentImplementation(MyContext context) : base(context)
+        public UserImplementation(MyContext context) : base(context)
         {
-            _dataset = context.Set<Agent>();
+            _dataset = context.Set<User>();
         }
 
-        public async Task<Agent> FindByLogin(string email)
+        public async Task<User> FindByLogin(string email)
         {
             return await _dataset.FirstOrDefaultAsync( p => p.Email.Equals(email)) 
             ??
             throw new SystemException("Usuário não encontrado");
         }
 
-        public async Task<Agent> UpdateAgentAsync(Agent item)
+        public async Task<User> UpdateAgentAsync(User item)
         {
             try
             {
@@ -36,9 +29,9 @@ namespace Api.Data.Implementations
 
                 if (result == null) return null;
 
-                result.Name = item.Name ?? result.Name;               
+                result.UserName = item.UserName ?? result.UserName;               
                 result.Email = item.Email ?? result.Email;
-                result.Phone = item.Phone ?? result.Phone;
+                result.PhoneNumber = item.PhoneNumber ?? result.PhoneNumber;
 
                 _context.Entry(result).CurrentValues.SetValues(item);
                 await _context.SaveChangesAsync();

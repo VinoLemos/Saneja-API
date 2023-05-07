@@ -30,8 +30,8 @@ namespace Application.Controllers
         public ActionResult<string> Get() => $"AutorizaController :: Acessado em : {DateTime.Now.ToLongDateString()}";
 
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] LoginDto login)
+        [Route("register-person")]
+        public async Task<IActionResult> RegisterPerson([FromBody] LoginDto login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
@@ -40,12 +40,39 @@ namespace Application.Controllers
             {
                 UserName = login.Email,
                 Email = login.Email,
-                EmailConfirmed = true
+                EmailConfirmed = false
             };
 
             var result = await _userManager.CreateAsync(user, login.Password);
 
             if (!result.Succeeded) return BadRequest(result.Errors);
+            
+            await _userManager.AddToRoleAsync(user, "Person");
+
+            await _signInManager.SignInAsync(user, false);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("register-agent")]
+        public async Task<IActionResult> RegisterAgent([FromBody] LoginDto login)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+
+            var user = new IdentityUser
+            {
+                UserName = login.Email,
+                Email = login.Email,
+                EmailConfirmed = false
+            };
+
+            var result = await _userManager.CreateAsync(user, login.Password);
+
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            await _userManager.AddToRoleAsync(user, "Agent");
 
             await _signInManager.SignInAsync(user, false);
 

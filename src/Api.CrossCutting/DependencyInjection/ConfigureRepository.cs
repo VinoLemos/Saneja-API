@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Api.Data.Context;
-using Api.Data.Implementations;
 using Api.Data.Repository;
 using Api.Domain.Interfaces;
-using Api.Domain.Repository;
 using Data.Implementations;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +18,6 @@ namespace Api.CrossCutting.DependencyInjection
                     b => b.MigrationsAssembly(migrationAssembly)));
 
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-            services.AddScoped<IPersonRepository, PersonImplementation>();
-            services.AddScoped<IAgentRepository, AgentImplementation>();
             services.AddScoped<IResidentialPropertyRepository, ResidentialPropertyImplementation>();
         }
     }

@@ -1,10 +1,9 @@
 using Api.Domain.Entities;
-using Api.Domain.Interfaces;
 
 namespace Api.Domain.Repository
 {
-    public interface IPersonRepository : IRepository<Person>
+    public interface IPersonRepository
     {
-        Task<Person> FindByLogin (string email);
+        Task<User> FindByLogin (string email);
     }
 }

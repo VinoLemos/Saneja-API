@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Api.Domain.Entities
 {
@@ -18,6 +14,6 @@ namespace Api.Domain.Entities
         public int Hidrometer { get; set; }
         [ForeignKey("Person")]
         public Guid PersonId { get; set; }
-        public virtual Person Person { get; set; }
+        public virtual User Person { get; set; }
     }
 }

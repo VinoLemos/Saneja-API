@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,9 +10,7 @@ namespace Api.Data.Mappings
         {
             builder.ToTable("Person");
 
-            builder.HasKey(p => p.Id);
-
-            builder.HasIndex(p => p.Cpf)
+            builder.HasIndex(p => p.Id)
                     .IsUnique();
 
             builder.Property(p => p.Cpf)
@@ -26,14 +20,6 @@ namespace Api.Data.Mappings
             builder.Property(p => p.Rg)
                     .IsRequired()
                     .HasMaxLength(9);
-
-            builder.Property(p => p.Name)
-                    .IsRequired()
-                    .HasMaxLength(60);
-
-            builder.Property(p => p.Email)
-                    .IsRequired()
-                    .HasMaxLength(60);
         }
     }
 }

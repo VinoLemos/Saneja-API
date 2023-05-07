@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Application.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Person")]
     [Route("api/[controller]")]
     [ApiController]
     public class PersonController : ControllerBase
     {
         const string modelStateError = "Solicitação inválida: ";
 
-        private readonly IPersonService _service;
+        private readonly IUserService _service;
 
-        public PersonController(IPersonService service)
+        public PersonController(IUserService service)
         {
             _service = service;
         }

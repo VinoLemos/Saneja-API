@@ -1,4 +1,4 @@
-﻿using Api.Domain.Interfaces.Services.AgentServices;
+﻿using Api.Domain.Interfaces.Services.PersonServices;
 using Domain.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +13,9 @@ namespace Application.Controllers
     {
         const string modelStateError = "Solicitação Inválida: ";
 
-        private readonly IAgentService _service;
+        private readonly IUserService _service;
 
-        public AgentController(IAgentService service)
+        public AgentController(IUserService service)
         {
             _service = service;
         }
