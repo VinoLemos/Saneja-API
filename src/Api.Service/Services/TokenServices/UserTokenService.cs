@@ -1,16 +1,11 @@
 ﻿using Api.Domain.Dtos;
-using Api.Domain.Entities;
 using Domain.Dtos;
 using Domain.Interfaces.Services.TokenServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services.TokenServices
 {
@@ -22,14 +17,20 @@ namespace Service.Services.TokenServices
         {
             _configuration = configuration;
         }
-        public UserTokenDto GenerateToken(LoginDto login)
+        public UserTokenDto GenerateToken(LoginDto login, List<string> roles)
         {
             // User declarations
-            var claims = new[]
+            var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, login.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+
+            // Add roles to claims
+            foreach (var role in roles)
+            {
+                claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, role))); 
+            }
 
             // Generates a key based on a simetric algorithm
             var key = new SymmetricSecurityKey(

@@ -7,16 +7,10 @@ namespace Api.Domain.Entities
         [ForeignKey("ResidencialProperty")]
         public Guid ResidencialPropertyId { get; set; }
         public virtual ResidentialProperty ResidencialProperty { get; set; }
-        [ForeignKey("Agent")]
-        public Guid AgentId { get; set; }
-        public virtual Agent Agent { get; set; }
+        [ForeignKey("Users")]
+        public Guid UserId { get; set; }
+        public virtual User Agent { get; set; }
         public VisitStatus Status { get; set; }
-        private DateTime _requestDate;
-        public DateTime RequestDate
-        {
-            get { return _requestDate; }
-            set { _requestDate = value == null ? DateTime.Now : value; }
-        }
         private DateTime _visitDate;
         public DateTime VisitDate
         {
@@ -27,5 +21,12 @@ namespace Api.Domain.Entities
         public bool Homologated { get; set; }
         public DateTime? HomologationDate { get; set; }
         public string? Observation { get; set; }
+    }
+
+    public enum VisitStatus
+    {
+        Pending,
+        InProgress,
+        Finished
     }
 }

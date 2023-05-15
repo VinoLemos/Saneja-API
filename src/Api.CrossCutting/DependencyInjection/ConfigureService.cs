@@ -1,15 +1,13 @@
 using Api.Data.Context;
-using Api.Data.Implementations;
 using Api.Domain.Entities;
-using Api.Domain.Interfaces.Services.PersonServices;
 using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
 using Api.Domain.Interfaces.Services.TechnicalVisitServices;
-using Api.Service.Services.PersonServices;
 using Api.Service.Services.ResidencialPropertyServices;
 using Api.Service.Services.TechnicalVisitServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Service.Services.PersonServices;
 using Service.Services.TokenServices;
 using System.Reflection;
 
@@ -19,22 +17,6 @@ namespace Api.CrossCutting.DependencyInjection
     {
         public static void ConfigureDependenciesService(IServiceCollection services)
         {
-            // User Services
-            services.AddTransient<IUserService, PersonServices>();
-
-            // Technical Visit Services
-            services.AddTransient<ITechnicalVisitService, TechnicalVisitService>();
-
-            // Residential Property Services
-            services.AddTransient<IResidentialPropertyService, ResidentialPropertyService>();
-
-            services.AddTransient<UserImplementation>();
-
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-            services.AddScoped<UserTokenService>();
-
-            // Identity Services
             // Identity Services
             services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
@@ -52,13 +34,14 @@ namespace Api.CrossCutting.DependencyInjection
                 .AddDefaultUI();
 
             services.AddScoped<IUserStore<User>, UserStore<User, IdentityRole<Guid>, MyContext, Guid>>();
+
             services.AddScoped<IRoleStore<IdentityRole<Guid>>, RoleStore<IdentityRole<Guid>, MyContext, Guid>>();
 
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            // Roles
+            services.AddScoped<UserTokenService>();
 
-            // Other services and repositories
-            // ...
+            services.AddScoped<PersonService>();
         }
     }
 }

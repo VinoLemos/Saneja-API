@@ -4,102 +4,50 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Repository
 {
-    public class UserRepository<T> : IUserRepository<T> where T : User
+    public class UserRepository : IBaseRepository<User>
     {
         protected readonly MyContext _context;
-        private DbSet<T> _dataSet;
         public UserRepository(MyContext context)
         {
             _context = context;
-            _dataSet = _context.Set<T>();
+        }
+        public async Task<User> InsertAsync(User user)
+        {
+            user.CreatedAt = DateTime.Now;
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return user;
         }
 
-        public async Task<T> InsertAsync(T item)
+        public async Task<User> SelectAsync(Guid id)
         {
-            try
-            {
-                if (item.Id == Guid.Empty) item.Id = Guid.NewGuid();
-
-                item.CreatedAt = DateTime.UtcNow;
-                _dataSet.Add(item);
-
-                await _context.SaveChangesAsync();
-
-                return item;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id) ?? throw new ArgumentException("Usuário não encontrado");
         }
 
-        public async Task<T> SelectAsync(Guid id)
+        public async Task<IEnumerable<User>> SelectAsync()
         {
-            try
-            {   
-                return await _dataSet.SingleOrDefaultAsync(x => x.Id == id) ?? null;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<IEnumerable<T>> SelectAsync()
-        {
-            try
-            {
-                return await _dataSet.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<T> UpdateAsync(T item)
-        {
-            try
-            {
-                var result = await _dataSet.SingleOrDefaultAsync(x => x.Id == item.Id);
-
-                if (result == null) return null;
-
-                item.UpdatedAt = DateTime.UtcNow;
-                item.CreatedAt = result.CreatedAt;
-
-                _context.Entry(result).CurrentValues.SetValues(item);
-                await _context.SaveChangesAsync();
-
-                return item;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public async Task<bool> DeleteAsync(Guid id)
-        {
-            try
-            {
-                var result = await _dataSet.SingleOrDefaultAsync(x => x.Id == id);
-
-                if (result == null) return false;
-
-                _dataSet.Remove(result);
-                await _context.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return await _context.Users.ToListAsync();
         }
 
         public async Task<bool> ExistsAsync(Guid id)
         {
-            return await _dataSet.AnyAsync(p => p.Id.Equals(id));
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id) != null;
+        }
+
+
+        public void UpdateAsync(User user)
+        {
+            var currentUser = _context.Users.FirstOrDefault(u => u.Id == user.Id) ?? throw new ArgumentException("Usuário não encontrado");
+
+            currentUser = user;
+
+            _context.Users.Update(currentUser);
+            _context.SaveChangesAsync();
+        }
+        public Task<bool> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

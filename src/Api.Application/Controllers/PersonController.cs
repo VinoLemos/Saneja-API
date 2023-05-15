@@ -1,8 +1,8 @@
-using System.Net;
-using Api.Domain.Interfaces.Services;
 using Api.Domain.Interfaces.Services.PersonServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Service.Services.PersonServices;
+using System.Net;
 
 namespace Api.Application.Controllers
 {
@@ -13,9 +13,9 @@ namespace Api.Application.Controllers
     {
         const string modelStateError = "Solicitação inválida: ";
 
-        private readonly IUserService _service;
+        private readonly PersonService _service;
 
-        public PersonController(IUserService service)
+        public PersonController(PersonService service)
         {
             _service = service;
         }
@@ -28,7 +28,7 @@ namespace Api.Application.Controllers
 
             try
             {
-                return Ok(await _service.GetAll());
+                return Ok(await _service.ListUsersAsync());
             }
             catch (ArgumentException e)
             {
@@ -38,13 +38,13 @@ namespace Api.Application.Controllers
 
         [HttpGet]
         [Route("get-client")]
-        public async Task<IActionResult> Get([FromRoute] Guid personId)
+        public async Task<IActionResult> Get([FromHeader] Guid personId)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                return Ok(await _service.Get(personId));
+                return Ok(await _service.SelectUserAsync(personId));
             }
             catch (ArgumentException e)
             {
@@ -54,13 +54,13 @@ namespace Api.Application.Controllers
 
         [HttpGet]
         [Route("client-exists")]
-        public async Task<IActionResult> Exists([FromRoute] Guid personId)
+        public async Task<IActionResult> Exists([FromHeader] Guid personId)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                return Ok(await _service.Exists(personId));
+                return Ok(await _service.UserExists(personId));
             }
             catch (ArgumentException e)
             {

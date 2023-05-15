@@ -8,7 +8,7 @@ namespace Api.Domain.Entities
         public int? Number { get; set; }
         public string Complement { get; set; }
         public string Neighborhood { get; set; }
-        public int Cep { get; set; }
+        public int? Cep { get; set; }
         public string City { get; set; }
         public int Rgi { get; set; }
         public int Hidrometer { get; set; }

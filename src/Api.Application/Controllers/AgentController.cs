@@ -6,7 +6,7 @@ using System.Net;
 
 namespace Application.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Agent")]
     [Route("api/[controller]")]
     [ApiController]
     public class AgentController : ControllerBase

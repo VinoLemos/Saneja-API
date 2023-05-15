@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Api.Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Implementations\" />
+  </ItemGroup>
+
 </Project>

@@ -29,7 +29,7 @@ namespace Api.Data.Context
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
                 connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 
-            if (!optionsBuilder.IsConfigured) 
+            if (!optionsBuilder.IsConfigured)
                 optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 
@@ -38,17 +38,28 @@ namespace Api.Data.Context
             base.OnModelCreating(modelBuilder);
             // Apply the IdentityUser configuration
             modelBuilder.ApplyConfiguration(new IdentityUserConfiguration());
-            modelBuilder.Entity<Person>(new PersonMap().Configure);
-            modelBuilder.Entity<Agent>(new AgentMap().Configure);
             modelBuilder.Entity<ResidentialProperty>(new ResidentialPropertyMap().Configure);
             modelBuilder.Entity<TechnicalVisit>(new TechnicalVisitMap().Configure);
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
+            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("User_Roles");
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("Role_Claims");
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("User_Claims");
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("User_Logins");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("User_Tokens");
+
+            modelBuilder.Entity<IdentityRole<Guid>>().HasData(
+                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN"},
+                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Agent", NormalizedName = "AGENT"},
+                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Person", NormalizedName = "PERSON"}
+                );
         }
 
-        public class IdentityUserConfiguration : IEntityTypeConfiguration<IdentityUser>
+        public class IdentityUserConfiguration : IEntityTypeConfiguration<User>
         {
-            public void Configure(EntityTypeBuilder<IdentityUser> builder)
+            public void Configure(EntityTypeBuilder<User> builder)
             {
-                // Configure the key property for IdentityUser entity
+                // Configure the key property for User entity
                 builder.HasKey(u => u.Id);
             }
         }

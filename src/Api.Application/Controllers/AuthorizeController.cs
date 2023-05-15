@@ -1,4 +1,6 @@
 ﻿using Api.Domain.Dtos;
+using Api.Domain.Entities;
+using Domain.Dtos.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.TokenServices;
@@ -9,13 +11,13 @@ namespace Application.Controllers
     [ApiController]
     public class AuthorizeController : ControllerBase
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly UserTokenService _userTokenService;
 
-        public AuthorizeController(UserManager<IdentityUser> userManager,
-                                   SignInManager<IdentityUser> signInManager,
+        public AuthorizeController(UserManager<User> userManager,
+                                   SignInManager<User> signInManager,
                                    IConfiguration configuration,
                                    UserTokenService userTokenService)
         {
@@ -31,19 +33,24 @@ namespace Application.Controllers
 
         [HttpPost]
         [Route("register-person")]
-        public async Task<IActionResult> RegisterPerson([FromBody] LoginDto login)
+        public async Task<IActionResult> RegisterPerson([FromBody] UserCreateDto create)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
-            var user = new IdentityUser
+            var user = new User
             {
-                UserName = login.Email,
-                Email = login.Email,
-                EmailConfirmed = false
+                UserName = create.Email,
+                Name = create.Name,
+                Email = create.Email,
+                EmailConfirmed = false,
+                Birthday = create.BirthDay,
+                Rg = create.Rg,
+                Cpf = (int)create.Cpf,
+                PhoneNumber = create.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, login.Password);
+            var result = await _userManager.CreateAsync(user, create.Password);
 
             if (!result.Succeeded) return BadRequest(result.Errors);
             
@@ -56,12 +63,12 @@ namespace Application.Controllers
 
         [HttpPost]
         [Route("register-agent")]
-        public async Task<IActionResult> RegisterAgent([FromBody] LoginDto login)
+        public async Task<IActionResult> RegisterAgent([FromBody] UserCreateDto login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
-            var user = new IdentityUser
+            var user = new User
             {
                 UserName = login.Email,
                 Email = login.Email,
@@ -95,7 +102,13 @@ namespace Application.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(_userTokenService.GenerateToken(login));
+            var user = await _userManager.FindByEmailAsync(login.Email);
+
+            if (user == null) return BadRequest("Usuário não encontrado");
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(_userTokenService.GenerateToken(login, roles.ToList()));
         }
     }
 }

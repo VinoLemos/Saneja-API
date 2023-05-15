@@ -33,8 +33,11 @@ namespace CrossCutting.DependencyInjection
             if (!await _roleManager.RoleExistsAsync("Agent"))
                 await _roleManager.CreateAsync(new IdentityRole("Agent"));
 
-            if (!await _roleManager.RoleExistsAsync("Supervisor"))
-                await _roleManager.CreateAsync(new IdentityRole("Supervisor"));
+            if (!await _roleManager.RoleExistsAsync("Person"))
+                await _roleManager.CreateAsync(new IdentityRole("Person"));
+
+            if (!await _roleManager.RoleExistsAsync("Admin"))
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
         }
     }
 }
