@@ -108,7 +108,7 @@ namespace Application.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            return Ok(_userTokenService.GenerateToken(login, roles.ToList()));
+            return Ok(_userTokenService.GenerateToken(login, roles.ToList(), user.Id));
         }
     }
 }

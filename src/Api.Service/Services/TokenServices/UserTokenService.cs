@@ -17,13 +17,14 @@ namespace Service.Services.TokenServices
         {
             _configuration = configuration;
         }
-        public UserTokenDto GenerateToken(LoginDto login, List<string> roles)
+        public UserTokenDto GenerateToken(LoginDto login, List<string> roles, Guid? userId)
         {
             // User declarations
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, login.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()) 
             };
 
             // Add roles to claims
