@@ -1,5 +1,4 @@
-﻿using Api.Domain.Entities;
-using AutoMapper;
+﻿using AutoMapper;
 using Data.Repository;
 using Domain.Dtos.User;
 
@@ -28,6 +27,13 @@ namespace Service.Services.PersonServices
             var user = await _repository.SelectAsync(id);
 
             return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDetailsDto> ReadUserDetails(Guid id)
+        {
+            var user = await _repository.SelectAsync(id);
+
+            return _mapper.Map<UserDetailsDto>(user);
         }
 
         public async Task<bool> UserExists(Guid id)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.PersonServices;
 using System.Net;
+using System.Security.Claims;
 
 namespace Api.Application.Controllers
 {
@@ -53,19 +54,44 @@ namespace Api.Application.Controllers
         }
 
         [HttpGet]
+        [Route("get-client-details")]
+        public async Task<IActionResult> GetDetails()
+        {
+            try
+            {
+                return Ok(await _service.ReadUserDetails(ReadUserId()));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+        
+        [HttpGet]
         [Route("client-exists")]
         public async Task<IActionResult> Exists([FromHeader] Guid personId)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
-            {
+            { 
                 return Ok(await _service.UserExists(personId));
             }
             catch (ArgumentException e)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
+        }
+
+        private Guid ReadUserId()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                throw new ArgumentException("Invalid User ID format");
+            }
+
+            return userId;
         }
     }
 }
