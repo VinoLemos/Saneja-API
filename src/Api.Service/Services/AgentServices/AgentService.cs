@@ -3,14 +3,14 @@ using AutoMapper;
 using Data.Repository;
 using Domain.Dtos.User;
 
-namespace Service.Services.PersonServices
+namespace Service.Services.AgentServices
 {
-    public class PersonService
+    public class AgentService
     {
-        private readonly PersonRepository _repository;
+        private readonly AgentRepository _repository;
         private readonly IMapper _mapper;
 
-        public PersonService(PersonRepository repository, IMapper mapper)
+        public AgentService(AgentRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -57,6 +57,5 @@ namespace Service.Services.PersonServices
                 return false;
             }
         }
-
     }
 }

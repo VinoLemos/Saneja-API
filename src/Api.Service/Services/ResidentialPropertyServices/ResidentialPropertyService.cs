@@ -1,51 +1,71 @@
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
+using AutoMapper;
+using Data.Repository;
+using Domain.Dtos.ResidentialPropertyDtos;
 using Domain.Repository;
 
 namespace Api.Service.Services.ResidencialPropertyServices
 {
-    public class ResidentialPropertyService : IResidentialPropertyService
+    public class ResidentialPropertyService
     {
-        private readonly IResidentialPropertyRepository _repository;
+        private readonly ResidentialPropertyRepository _repository;
+        private readonly IMapper _mapper;
 
-        public ResidentialPropertyService(IResidentialPropertyRepository repository)
+        public ResidentialPropertyService(ResidentialPropertyRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<bool> Exists(Guid id)
+        public async Task<ResidentialPropertyDto> Get(Guid propertyId)
         {
-            return await _repository.ExistsAsync(id);
-        }
-
-        public async Task<ResidentialProperty> Get(Guid id)
-        {
-            return await _repository.SelectAsync(id);
+            var property = await _repository.SelectAsync(propertyId);
+            return _mapper.Map<ResidentialPropertyDto>(property);
         }
 
         public async Task<ResidentialProperty> GetByRgi(int? rgi)
         {
-            return await _repository.FindByRgi(rgi);
+            return await _repository.SelectByRgi((int)rgi);
         }
 
-        public async Task<IEnumerable<ResidentialProperty>> GetAll()
+        public async Task<List<ResidentialPropertyDto>> GetUserProperties(Guid userId)
         {
-            return await _repository.SelectAsync();
+            var properties = await _repository.SelectUserProperties(userId);
+
+            var propertyList = _mapper.Map<List<ResidentialPropertyDto>>(properties);
+
+            return propertyList;
         }
 
-        public async Task<IEnumerable<ResidentialProperty>> GetByStreet(string? street)
+        public async Task<bool> Post(ResidentialPropertyDto residentialProperty)
         {
-            return await _repository.FindByStreet(street);
+            try
+            {
+                var property = _mapper.Map<ResidentialProperty>(residentialProperty);
+                var newProperty = await _repository.InsertAsync(property);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        public async Task<ResidentialProperty> Post(ResidentialProperty residentialProperty)
+        public bool Put(ResidentialPropertyDto residentialProperty)
         {
-            return await _repository.InsertAsync(residentialProperty);
-        }
+            try
+            {
+                var currentProperty = _mapper.Map<ResidentialProperty>(residentialProperty);
+                _repository.UpdateAsync(currentProperty);
 
-        public async Task<ResidentialProperty> Put(ResidentialProperty residentialProperty)
-        {
-            return await _repository.UpdateAsync(residentialProperty);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         public async Task<bool> Delete(Guid id)
         {

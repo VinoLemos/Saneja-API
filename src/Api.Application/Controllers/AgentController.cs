@@ -1,8 +1,9 @@
-﻿using Api.Domain.Interfaces.Services.PersonServices;
-using Domain.Dtos.User;
+﻿using Domain.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Service.Services.AgentServices;
 using System.Net;
+using System.Security.Claims;
 
 namespace Application.Controllers
 {
@@ -13,9 +14,9 @@ namespace Application.Controllers
     {
         const string modelStateError = "Solicitação Inválida: ";
 
-        private readonly IUserService _service;
+        private readonly AgentService _service;
 
-        public AgentController(IUserService service)
+        public AgentController(AgentService service)
         {
             _service = service;
         }
@@ -28,7 +29,7 @@ namespace Application.Controllers
 
             try
             {
-                return Ok(await _service.GetAll());
+                return Ok(await _service.ListUsersAsync());
             }
             catch (ArgumentException e)
             {
@@ -44,7 +45,7 @@ namespace Application.Controllers
 
             try
             {
-                return Ok(await _service.Get(agentId));
+                return Ok(await _service.SelectUserAsync(agentId));
             }
             catch (ArgumentException e)
             {
@@ -60,25 +61,7 @@ namespace Application.Controllers
 
             try
             {
-                return Ok(await _service.Exists(agentId));
-            }
-            catch (ArgumentException e)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("create-agent")]
-        public async Task<IActionResult> CreateAgent([FromBody] UserCreateDto agent)
-        {
-            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
-
-            try
-            {
-                var result = await _service.Post(agent);
-
-                return result != null ? Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result) : BadRequest();
+                return Ok(await _service.UserExists(agentId));
             }
             catch (ArgumentException e)
             {
@@ -88,20 +71,31 @@ namespace Application.Controllers
 
         [HttpPut]
         [Route("update-agent")]
-        public async Task<IActionResult> UpdateAgent([FromBody] UserUpdateDto agent)
+        public IActionResult UpdateAgent([FromBody] UserUpdateDto user)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var result = await _service.Put(agent);
+                var updated = _service.UpdateUser(user);
 
-                return result != null ? Ok(result) : BadRequest();
+                return updated ? Ok("Cliente atualizado") : BadRequest();
             }
             catch (ArgumentException e)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
+        }
+
+        private Guid ReadUserId()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                throw new ArgumentException("Invalid User ID format");
+            }
+
+            return userId;
         }
     }
 }

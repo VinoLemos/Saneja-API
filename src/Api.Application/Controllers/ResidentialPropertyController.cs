@@ -1,7 +1,10 @@
 ﻿using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
+using Api.Service.Services.ResidencialPropertyServices;
+using Domain.Dtos.ResidentialPropertyDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace Application.Controllers
 {
@@ -12,22 +15,23 @@ namespace Application.Controllers
     {
         const string modelStateError = "Solicitação Inválida: ";
 
-        private readonly IResidentialPropertyService _service;
+        private readonly ResidentialPropertyService _service;
 
-        public ResidentialPropertyController(IResidentialPropertyService service)
+        public ResidentialPropertyController(ResidentialPropertyService service)
         {
             _service = service;
         }
 
+        [Authorize(Roles = "Person")]
         [HttpGet]
-        [Route("get-properties")]
-        public async Task<IActionResult> GetAll()
+        [Route("get-user-properties")]
+        public async Task<IActionResult> GetUserProperties()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                return Ok(await _service.GetAll());
+                return Ok(await _service.GetUserProperties(ReadUserId()));
             }
             catch (ArgumentException ex)
             {
@@ -70,24 +74,56 @@ namespace Application.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("get-property-by-street")]
-        public async Task<IActionResult> GetByStreet(string? street)
+        [Authorize(Roles = "Person")]
+        [HttpPost]
+        [Route("register-property")]
+        public async Task<IActionResult> RegisterProperty([FromBody] ResidentialPropertyDto obj)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
-
-            if (String.IsNullOrEmpty(street)) return BadRequest("Rua inválida");
-
             try
             {
-                var imovel = await _service.GetByStreet(street);
-                return imovel != null ? Ok(imovel) : NotFound("Imóvel não encontrado");
+                var created = await _service.Post(obj);
+
+                if (!created) return BadRequest("Imóvel não registrado");
+
+                return Ok();
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
+        [Authorize(Roles = "Person")]
+        [HttpPut]
+        [Route("update-property")]
+        public IActionResult UpdateProperty([FromBody] ResidentialPropertyDto obj)
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var updated = _service.Put(obj);
+                if (!updated) return BadRequest("Imóvel não atualizado");
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private Guid ReadUserId()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                throw new ArgumentException("Invalid User ID format");
+            }
+
+            return userId;
+        }
     }
 }

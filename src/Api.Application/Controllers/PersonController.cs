@@ -1,4 +1,5 @@
 using Api.Domain.Interfaces.Services.PersonServices;
+using Domain.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.PersonServices;
@@ -66,7 +67,7 @@ namespace Api.Application.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
         }
-        
+
         [HttpGet]
         [Route("client-exists")]
         public async Task<IActionResult> Exists([FromHeader] Guid personId)
@@ -74,9 +75,27 @@ namespace Api.Application.Controllers
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
-            { 
+            {
                 return Ok(await _service.UserExists(personId));
             }
+            catch (ArgumentException e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("update-client")]
+        public IActionResult UpdateClient([FromBody] UserUpdateDto user)
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var updated = _service.UpdateUser(user);
+
+                return updated ? Ok("Cliente atualizado") : BadRequest(); 
+             }
             catch (ArgumentException e)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);

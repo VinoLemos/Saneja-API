@@ -52,9 +52,17 @@ namespace Data.Repository
         }
 
 
-        public void UpdateAsync(User item)
+        public async void UpdateAsync(User item)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == item.Id) ?? throw new ArgumentException("Usuário não encontrado");
+
+            user.Name = item.Name ?? user.Name;
+            user.Email = item.Email ?? user.Email;
+            user.PhoneNumber = item.PhoneNumber ?? user.PhoneNumber;
+            user.Birthday = item.Birthday ?? user.Birthday;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
         public async Task<bool> DeleteAsync(Guid id)
         {
