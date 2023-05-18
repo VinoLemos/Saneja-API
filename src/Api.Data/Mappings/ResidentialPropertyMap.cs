@@ -1,11 +1,12 @@
 using Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Api.Data.Mappings
 {
     public class ResidentialPropertyMap : IEntityTypeConfiguration<ResidentialProperty>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ResidentialProperty> builder)
+        public void Configure(EntityTypeBuilder<ResidentialProperty> builder)
         {
             builder.ToTable("Residential_Property");
 

@@ -1,5 +1,7 @@
 using Api.Data.Mappings;
 using Api.Domain.Entities;
+using Data.Mappings;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,7 @@ namespace Api.Data.Context
             modelBuilder.Entity<ResidentialProperty>(new ResidentialPropertyMap().Configure);
             modelBuilder.Entity<TechnicalVisit>(new TechnicalVisitMap().Configure);
             modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<VisitStatus>(new VisitStatusMap().Configure);
             modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("User_Roles");
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("Role_Claims");
@@ -49,9 +52,15 @@ namespace Api.Data.Context
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("User_Tokens");
 
             modelBuilder.Entity<IdentityRole<Guid>>().HasData(
-                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Admin", NormalizedName = "ADMIN"},
-                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Agent", NormalizedName = "AGENT"},
-                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Person", NormalizedName = "PERSON"}
+                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Supervisor", NormalizedName = "SUPERVISOR" },
+                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Agent", NormalizedName = "AGENT" },
+                new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "Person", NormalizedName = "PERSON" }
+                );
+
+            modelBuilder.Entity<VisitStatus>().HasData(
+                   new VisitStatus { Id = 1, Status = "Pending" },
+                   new VisitStatus { Id = 2, Status = "In Progress" },
+                   new VisitStatus { Id = 3, Status = "Finished" }
                 );
         }
 
