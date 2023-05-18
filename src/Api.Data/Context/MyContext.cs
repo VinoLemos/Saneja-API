@@ -60,7 +60,8 @@ namespace Api.Data.Context
             modelBuilder.Entity<VisitStatus>().HasData(
                    new VisitStatus { Id = 1, Status = "Pending" },
                    new VisitStatus { Id = 2, Status = "In Progress" },
-                   new VisitStatus { Id = 3, Status = "Finished" }
+                   new VisitStatus { Id = 3, Status = "Finished" },
+                   new VisitStatus { Id = 4, Status = "Canceled"}
                 );
         }
 

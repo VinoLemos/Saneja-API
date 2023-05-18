@@ -2,7 +2,7 @@ namespace Api.Data.Repository
 {
     public interface IBaseRepository<T>
     {
-        public abstract Task<T> InsertAsync(T item);
+        public abstract Task<bool> InsertAsync(T item);
         public abstract Task<T> SelectAsync(Guid id);
         public abstract Task<IEnumerable<T>> SelectAsync();
         public abstract void UpdateAsync(T item);

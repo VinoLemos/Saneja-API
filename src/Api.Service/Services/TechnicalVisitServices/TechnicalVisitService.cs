@@ -1,46 +1,79 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Api.Domain.Entities;
-using Api.Domain.Interfaces;
-using Api.Domain.Interfaces.Services.TechnicalVisitServices;
+using AutoMapper;
+using Data.Repository;
+using Domain.Dtos.TechnicalVisitDtos;
 
 namespace Api.Service.Services.TechnicalVisitServices
 {
-    public class TechnicalVisitService : ITechnicalVisitService
+    public class TechnicalVisitService
     {
-        private readonly IRepository<TechnicalVisit> _repository;
+        private readonly TechnicalVisitRepository _repository;
+        private readonly IMapper _mapper;
+        private const int InProgress = 2;
+        private const int Canceled = 4;
 
-        public TechnicalVisitService(IRepository<TechnicalVisit> repository)
+        public TechnicalVisitService(TechnicalVisitRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<bool> Exists(Guid id)
+        public async Task<TechnicalVisitDto> Get(Guid id)
         {
-            return await _repository.ExistsAsync(id);
+            var visit = await _repository.SelectAsync(id);
+
+            return _mapper.Map<TechnicalVisitDto>(visit);
         }
 
-        public async Task<TechnicalVisit> Get(Guid id)
+        public async Task<List<TechnicalVisitDto>> GetAgentVisits(Guid agentId)
         {
-            return await _repository.SelectAsync(id);
+            var visits = await _repository.SelectAgentVisits(agentId);
+
+            var visitsDto = _mapper.Map<List<TechnicalVisitDto>>(visits);
+
+            return visitsDto;
         }
 
-        public async Task<IEnumerable<TechnicalVisit>> GetAll()
+        public async Task<bool> Post(TechnicalVisitDto technicalVisit)
         {
-            return await _repository.SelectAsync();
+            var visit = _mapper.Map<TechnicalVisit>(technicalVisit);
+            var created = await _repository.InsertAsync(visit);
+
+            return created;
         }
 
-        public async Task<TechnicalVisit> Post(TechnicalVisit technicalVisit)
+        public bool PostVisitObservation(TechnicalVisitObservationDto observation)
         {
-            return await _repository.InsertAsync(technicalVisit);
+            try
+            {
+                var posted = _repository.UpdateVisitObservation(observation.VisitId, observation.Observation);
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
         }
 
-        public async Task<TechnicalVisit> Put(TechnicalVisit technicalVisit)
+        public async Task<bool> CancelVisit(Guid visitId)
         {
-            return await _repository.UpdateAsync(technicalVisit);
+            try
+            {             
+                var visit = await _repository.SelectAsync(visitId);
+
+                if (visit == null) throw new ArgumentException("Visita não encontrada.");
+                if (visit.StatusId == InProgress) throw new ArgumentException("Só é possível cancelar visitas pendentes.");
+                if (visit.StatusId == Canceled) throw new ArgumentException("Visita já cancelada.");
+                
+                return _repository.CancelVisit(visitId);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
+
         public async Task<bool> Delete(Guid id)
         {
             return await _repository.DeleteAsync(id);

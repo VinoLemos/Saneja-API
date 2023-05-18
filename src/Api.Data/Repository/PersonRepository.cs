@@ -14,7 +14,7 @@ namespace Data.Repository
         {
             _context = context;
         }
-        public Task<User> InsertAsync(User item)
+        public Task<bool> InsertAsync(User item)
         {
             throw new NotImplementedException();
         }
