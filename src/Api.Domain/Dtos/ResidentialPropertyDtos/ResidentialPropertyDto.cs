@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Api.Domain.Entities
+﻿namespace Domain.Dtos.ResidentialPropertyDtos
 {
-    public class ResidentialProperty : BaseEntity
+    public class ResidentialPropertyDto
     {
         public string Street { get; set; }
         public int? Number { get; set; }
@@ -13,8 +11,5 @@ namespace Api.Domain.Entities
         public string UF { get; set; }
         public int Rgi { get; set; }
         public int Hidrometer { get; set; }
-        [ForeignKey("Person")]
-        public Guid PersonId { get; set; }
-        public virtual User Person { get; set; }
     }
 }

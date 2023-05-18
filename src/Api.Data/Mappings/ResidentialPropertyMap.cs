@@ -26,6 +26,9 @@ namespace Api.Data.Mappings
             builder.Property(p => p.City)
                     .HasMaxLength(50);
 
+            builder.Property(p => p.UF)
+                    .HasMaxLength(2);
+
             builder.Property(p => p.PersonId)
                     .IsRequired();
         }
