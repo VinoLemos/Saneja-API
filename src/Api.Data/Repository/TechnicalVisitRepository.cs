@@ -79,7 +79,7 @@ namespace Data.Repository
 
         public async Task<IEnumerable<TechnicalVisit>> SelectFinishedVisits()
         {
-            var visits = await _context.TechnicalVisits.Where(t => t.StatusId == Finished ).ToListAsync();
+            var visits = await _context.TechnicalVisits.Where(t => t.StatusId == Finished).ToListAsync();
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas completas.");
         }
@@ -126,7 +126,7 @@ namespace Data.Repository
 
                 return true;
 
-    }
+            }
             catch (Exception)
             {
                 return false;

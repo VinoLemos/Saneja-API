@@ -24,13 +24,13 @@ namespace Service.Services.TokenServices
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, login.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()) 
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
             };
 
             // Add roles to claims
             foreach (var role in roles)
             {
-                claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, role))); 
+                claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, role)));
             }
 
             // Generates a key based on a simetric algorithm

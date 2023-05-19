@@ -53,7 +53,7 @@ namespace Application.Controllers
             var result = await _userManager.CreateAsync(user, create.Password);
 
             if (!result.Succeeded) return BadRequest(result.Errors);
-            
+
             await _userManager.AddToRoleAsync(user, "Person");
 
             await _signInManager.SignInAsync(user, false);

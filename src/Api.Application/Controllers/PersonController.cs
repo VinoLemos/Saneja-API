@@ -1,4 +1,3 @@
-using Api.Domain.Interfaces.Services.PersonServices;
 using Domain.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -94,8 +93,8 @@ namespace Api.Application.Controllers
             {
                 var updated = _service.UpdateUser(user);
 
-                return updated ? Ok("Cliente atualizado") : BadRequest(); 
-             }
+                return updated ? Ok("Cliente atualizado") : BadRequest();
+            }
             catch (ArgumentException e)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);

@@ -14,10 +14,10 @@ namespace Api.Data.Mappings
 
             builder.HasIndex(p => p.Rgi)
                     .IsUnique();
-            
+
             builder.Property(p => p.Street)
                     .HasMaxLength(100);
-            
+
             builder.Property(p => p.Complement)
                     .HasMaxLength(30);
 

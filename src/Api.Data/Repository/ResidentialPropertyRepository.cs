@@ -2,7 +2,6 @@
 using Api.Data.Repository;
 using Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace Data.Repository
 {

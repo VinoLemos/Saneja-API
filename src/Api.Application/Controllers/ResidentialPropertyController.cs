@@ -1,5 +1,4 @@
-﻿using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
-using Api.Service.Services.ResidencialPropertyServices;
+﻿using Api.Service.Services.ResidencialPropertyServices;
 using Domain.Dtos.ResidentialPropertyDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

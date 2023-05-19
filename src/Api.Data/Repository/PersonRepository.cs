@@ -1,7 +1,6 @@
 ﻿using Api.Data.Context;
 using Api.Data.Repository;
 using Api.Domain.Entities;
-using Api.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
@@ -58,7 +57,7 @@ namespace Data.Repository
             user.Email = item.Email ?? user.Email;
             user.PhoneNumber = item.PhoneNumber ?? user.PhoneNumber;
             user.Birthday = item.Birthday ?? user.Birthday;
-            
+
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }

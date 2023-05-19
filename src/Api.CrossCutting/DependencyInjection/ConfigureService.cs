@@ -1,9 +1,5 @@
 using Api.Data.Context;
 using Api.Domain.Entities;
-using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
-using Api.Domain.Interfaces.Services.TechnicalVisitServices;
-using Api.Service.Services.ResidencialPropertyServices;
-using Api.Service.Services.TechnicalVisitServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

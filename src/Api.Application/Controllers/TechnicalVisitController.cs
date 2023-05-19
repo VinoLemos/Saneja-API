@@ -3,7 +3,6 @@ using Domain.Dtos.TechnicalVisitDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Runtime.InteropServices;
 
 namespace Application.Controllers
 {

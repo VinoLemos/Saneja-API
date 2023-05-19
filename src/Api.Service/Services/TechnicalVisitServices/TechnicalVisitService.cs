@@ -59,13 +59,13 @@ namespace Api.Service.Services.TechnicalVisitServices
         public async Task<bool> CancelVisit(Guid visitId)
         {
             try
-            {             
+            {
                 var visit = await _repository.SelectAsync(visitId);
 
                 if (visit == null) throw new ArgumentException("Visita não encontrada.");
                 if (visit.StatusId == InProgress) throw new ArgumentException("Só é possível cancelar visitas pendentes.");
                 if (visit.StatusId == Canceled) throw new ArgumentException("Visita já cancelada.");
-                
+
                 return _repository.CancelVisit(visitId);
             }
             catch (Exception)

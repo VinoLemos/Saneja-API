@@ -1,9 +1,7 @@
 using Api.Domain.Entities;
-using Api.Domain.Interfaces.Services.ResidencialPropertyServices;
 using AutoMapper;
 using Data.Repository;
 using Domain.Dtos.ResidentialPropertyDtos;
-using Domain.Repository;
 
 namespace Api.Service.Services.ResidencialPropertyServices
 {

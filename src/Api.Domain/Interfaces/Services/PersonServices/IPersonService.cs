@@ -10,7 +10,7 @@ namespace Domain.Interfaces.Services.PersonServices
         {
             throw new NotImplementedException();
         }
-        
+
         public Task<IEnumerable<User>> GetAll()
         {
             throw new NotImplementedException();

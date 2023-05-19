@@ -1,8 +1,8 @@
-﻿using Domain.Dtos.User;
-using Domain.Models;
+﻿using Api.Domain.Entities;
 using AutoMapper;
-using Api.Domain.Entities;
 using Domain.Dtos.TechnicalVisitDtos;
+using Domain.Dtos.User;
+using Domain.Models;
 
 namespace CrossCutting.Mappings
 {
