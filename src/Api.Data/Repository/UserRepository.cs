@@ -11,14 +11,6 @@ namespace Api.Data.Repository
         {
             _context = context;
         }
-        public async Task<User> InsertAsync(User user)
-        {
-            user.CreatedAt = DateTime.Now;
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-
-            return user;
-        }
 
         public async Task<User> SelectAsync(Guid id)
         {
@@ -46,6 +38,11 @@ namespace Api.Data.Repository
             _context.SaveChangesAsync();
         }
         public Task<bool> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IBaseRepository<User>.InsertAsync(User item)
         {
             throw new NotImplementedException();
         }

@@ -24,12 +24,12 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<ResidentialProperty> InsertAsync(ResidentialProperty item)
+        public async Task<bool> InsertAsync(ResidentialProperty item)
         {
             await _context.ResidencialProperties.AddAsync(item);
             await _context.SaveChangesAsync();
 
-            return item;
+            return true;
         }
 
         public async Task<ResidentialProperty> SelectAsync(Guid id)

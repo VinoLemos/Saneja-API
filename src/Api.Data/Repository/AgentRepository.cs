@@ -14,11 +14,6 @@ namespace Data.Repository
             _context = context;
         }
 
-        public Task<User> InsertAsync(User item)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<User> SelectAsync(Guid id)
         {
             var user = await (from u in _context.Users
@@ -78,6 +73,11 @@ namespace Data.Repository
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        Task<bool> IBaseRepository<User>.InsertAsync(User item)
+        {
+            throw new NotImplementedException();
         }
     }
 }
