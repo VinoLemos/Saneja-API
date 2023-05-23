@@ -3,6 +3,7 @@ using Domain.Dtos.TechnicalVisitDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace Application.Controllers
 {
@@ -63,6 +64,28 @@ namespace Application.Controllers
 
         [Authorize(Roles = "Agent")]
         [HttpPut]
+        [Route("accept-visit")]
+        public IActionResult AcceptVisit([FromHeader] Guid visitId)
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var accepted = _service.AcceptVisit(visitId, ReadUserId());
+
+                if (accepted == false) return BadRequest();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+
+        [Authorize(Roles = "Agent")]
+        [HttpPut]
         [Route("visit-homologation")]
         public IActionResult HomologateVisit([FromBody] TechnicalVisitObservationDto homologation)
         {
@@ -92,6 +115,17 @@ namespace Application.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
+        }
+
+        private Guid ReadUserId()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                throw new ArgumentException("Invalid User ID format");
+            }
+
+            return userId;
         }
     }
 }

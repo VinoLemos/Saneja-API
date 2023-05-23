@@ -42,6 +42,13 @@ namespace Api.Service.Services.TechnicalVisitServices
             return created;
         }
 
+        public bool AcceptVisit(Guid visitId, Guid agentId)
+        {
+            var accepted = _repository.AcceptVisit(visitId, agentId);
+
+            return accepted;
+        }
+
         public bool PostVisitObservation(TechnicalVisitObservationDto observation)
         {
             try

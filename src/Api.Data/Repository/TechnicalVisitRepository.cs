@@ -116,6 +116,37 @@ namespace Data.Repository
             }
         }
 
+        public bool AcceptVisit(Guid visitId, Guid agentId)
+        {
+            try
+            {
+                var visit = _context.TechnicalVisits.FirstOrDefault(v => v.Id == agentId);
+
+                if (visit == null) throw new ArgumentException("Visita inválida");
+
+                var agent = (from u in _context.Users
+                             join userRoles in _context.UserRoles on u.Id equals userRoles.UserId
+                             join roles in _context.Roles on userRoles.RoleId equals roles.Id
+                             where roles.Name == "Agent"
+                             && u.Id == agentId
+                             select u).FirstOrDefault();
+
+                if (agent == null) throw new ArgumentException("Agente inválido");
+
+                visit.StatusId = InProgress;
+                visit.UserId = agentId;
+                visit.UpdatedAt = DateTime.Now;
+
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public bool CancelVisit(Guid visitId)
         {
             try
