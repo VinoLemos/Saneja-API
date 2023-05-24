@@ -10,7 +10,7 @@ namespace Api.CrossCutting.DependencyInjection
         public static void ConfigureDependenciesRepository(IServiceCollection services, string? mySqlConnection, string? migrationAssembly)
         {
             services.AddDbContext<MyContext>(options =>
-                options.UseMySql(mySqlConnection,
+                options.UseMySql(mySqlConnection,   
                     ServerVersion.AutoDetect(mySqlConnection),
                     b => b.MigrationsAssembly(migrationAssembly)));
 

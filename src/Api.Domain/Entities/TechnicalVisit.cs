@@ -11,6 +11,7 @@ namespace Api.Domain.Entities
         [ForeignKey("Users")]
         public Guid UserId { get; set; } // Id do agente responsável pela visita
         public virtual User Agent { get; set; }
+        [ForeignKey("Visit_Status")]
         public int StatusId { get; set; }
         private DateTime _visitDate;
         public DateTime VisitDate

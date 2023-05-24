@@ -15,6 +15,8 @@ namespace Api.Data.Context
         public DbSet<ResidentialProperty> ResidencialProperties { get; set; }
         public DbSet<TechnicalVisit> TechnicalVisits { get; set; }
 
+        public DbSet<VisitStatus> VisitStatuses { get; set; } 
+
         public MyContext()
         {
 
@@ -43,7 +45,7 @@ namespace Api.Data.Context
             modelBuilder.Entity<ResidentialProperty>(new ResidentialPropertyMap().Configure);
             modelBuilder.Entity<TechnicalVisit>(new TechnicalVisitMap().Configure);
             modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<VisitStatus>(new VisitStatusMap().Configure);
+            modelBuilder.Entity<VisitStatus>().ToTable("Visit_Status");
             modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("User_Roles");
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("Role_Claims");
@@ -58,10 +60,10 @@ namespace Api.Data.Context
                 );
 
             modelBuilder.Entity<VisitStatus>().HasData(
-                   new VisitStatus { Id = 1, Status = "Pending" },
-                   new VisitStatus { Id = 2, Status = "In Progress" },
-                   new VisitStatus { Id = 3, Status = "Finished" },
-                   new VisitStatus { Id = 4, Status = "Canceled" }
+                   new VisitStatus { Id = Guid.NewGuid(), Status = "Pending" },
+                   new VisitStatus { Id = Guid.NewGuid(), Status = "In Progress" },
+                   new VisitStatus { Id = Guid.NewGuid(), Status = "Finished" },
+                   new VisitStatus { Id = Guid.NewGuid(), Status = "Canceled" }
                 );
         }
 

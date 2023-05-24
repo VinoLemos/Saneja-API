@@ -1,8 +1,9 @@
-﻿namespace Domain.Entities
+﻿using Api.Domain.Entities;
+
+namespace Domain.Entities
 {
-    public class VisitStatus
+    public class VisitStatus : BaseEntity
     {
-        public int Id { get; set; }
         public string Status { get; set; }
     }
 }

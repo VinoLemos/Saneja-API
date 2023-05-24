@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20230518230016_VisitaCancelada")]
-    partial class VisitaCancelada
+    [Migration("20230524012317_Visit Status fk")]
+    partial class VisitStatusfk
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,6 +112,9 @@ namespace Data.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("StatusId1")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -125,7 +128,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ResidencialPropertyId");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("StatusId1");
 
                     b.HasIndex("UserId");
 
@@ -218,13 +221,19 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.VisitStatus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -233,22 +242,22 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("0e52f812-32f8-4f59-97f0-003b1c21e385"),
                             Status = "Pending"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("b678b444-4422-4b26-b26b-dd6c7220fbcf"),
                             Status = "In Progress"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("e0a2eb2b-2b51-4e47-a7ca-b6afa3c966b5"),
                             Status = "Finished"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("03448e09-4d57-4f05-b0c2-ec1b10d7691d"),
                             Status = "Canceled"
                         });
                 });
@@ -282,19 +291,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e6f6e87e-4dcc-4389-b1bc-d1deacaca4c9"),
+                            Id = new Guid("195f6141-21da-4c28-a9c5-d79ec6658b91"),
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = new Guid("8ab84098-cb8f-42ea-a1fd-5518be31f93b"),
+                            Id = new Guid("ce397ceb-fa1e-4d44-8e75-0242e198cc30"),
                             Name = "Agent",
                             NormalizedName = "AGENT"
                         },
                         new
                         {
-                            Id = new Guid("bd6f0b06-c908-4cac-a5b9-5da95f2694ed"),
+                            Id = new Guid("fe6c9d53-7807-4014-b9ee-b7d57b617b55"),
                             Name = "Person",
                             NormalizedName = "PERSON"
                         });
@@ -420,7 +429,7 @@ namespace Data.Migrations
 
                     b.HasOne("Domain.Entities.VisitStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId")
+                        .HasForeignKey("StatusId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
