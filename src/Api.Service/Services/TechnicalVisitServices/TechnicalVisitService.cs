@@ -39,7 +39,7 @@ namespace Api.Service.Services.TechnicalVisitServices
             var visit = _mapper.Map<TechnicalVisit>(technicalVisit);
             var created = await _repository.InsertAsync(visit);
 
-            return created;
+            return created != null;
         }
 
         public bool AcceptVisit(Guid visitId, Guid agentId)

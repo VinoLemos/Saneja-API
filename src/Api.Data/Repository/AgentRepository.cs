@@ -75,7 +75,7 @@ namespace Data.Repository
             return true;
         }
 
-        Task<bool> IBaseRepository<User>.InsertAsync(User item)
+        public Task<User> InsertAsync(User item)
         {
             throw new NotImplementedException();
         }

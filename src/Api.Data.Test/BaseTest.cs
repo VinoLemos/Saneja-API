@@ -20,19 +20,6 @@ public class DbTeste : IDisposable
 
     public DbTeste()
     {
-        //var configuration = new ConfigurationBuilder()
-        //    .SetBasePath(GetProjectPath())
-        //    .AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: false)
-        //    .Build();
-
-        //var connectionString = configuration.GetConnectionString("DevelopmentConnection");
-        //var serviceCollection = new ServiceCollection();
-
-        //serviceCollection.AddDbContext<MyContext>(o =>
-        //    o.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)),
-        //    ServiceLifetime.Transient
-        //);
-
         var serviceCollection = new ServiceCollection();
         var connectionString = $"Persist Security Info=True;Server=127.0.0.1;Database={databaseName};User=root;Password=1234";
         serviceCollection.AddDbContext<MyContext>(o =>
@@ -52,24 +39,4 @@ public class DbTeste : IDisposable
         using var context = ServiceProvider.GetService<MyContext>();
         context.Database.EnsureDeleted();
     }
-
-    //private static string GetProjectPath()
-    //{
-    //    var currentDirectory = Directory.GetCurrentDirectory();
-    //    var solutionDirectory = Directory.GetParent(currentDirectory)?.Parent?.Parent?.FullName;
-
-    //    if (solutionDirectory != null)
-    //    {
-    //        var appPath = Path.Combine(solutionDirectory, "../../src/Api.Application");
-    //        if (Directory.Exists(appPath))
-    //            return appPath;
-    //    }
-
-    //    throw new ApplicationException("Unable to locate the project root directory.");
-    //}
 }
-
-
-
-
-//connectionString.Replace("{databaseName}", databaseName), ServerVersion.AutoDetect(connectionString)

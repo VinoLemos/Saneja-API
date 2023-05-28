@@ -42,7 +42,7 @@ namespace Api.Data.Repository
             throw new NotImplementedException();
         }
 
-        Task<bool> IBaseRepository<User>.InsertAsync(User item)
+        Task<User> IBaseRepository<User>.InsertAsync(User item)
         {
             throw new NotImplementedException();
         }

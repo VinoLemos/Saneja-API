@@ -13,11 +13,10 @@ namespace Data.Repository
         {
             _context = context;
         }
-        public async Task<bool> InsertAsync(User item)
+        public async Task<User> InsertAsync(User item)
         {
             var user = new User
             {
-                Id = Guid.NewGuid(),
                 UserName = item.Email,
                 Name = item.Name,
                 Email = item.Email,
@@ -32,11 +31,11 @@ namespace Data.Repository
             {
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
-                return true;
+                return user;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                throw new ArgumentException(ex.Message);
             }
         }
 
@@ -54,10 +53,10 @@ namespace Data.Repository
         public async Task<User> SelectUserAsync(Guid id)
         {
             var user = await (from u in _context.Users
-                          where u.Id == id
-                          select u).FirstOrDefaultAsync();
+                              where u.Id == id
+                              select u).FirstOrDefaultAsync();
 
-            return user ?? throw new ArgumentException("Usuário não encontrado");
+            return user ?? null;
         }
 
         public async Task<IEnumerable<User>> SelectAsync()
@@ -80,9 +79,9 @@ namespace Data.Repository
 
             return user != null;
         }
-        public async void UpdateAsync(User item)
+        public void UpdateAsync(User item)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == item.Id) ?? throw new ArgumentException("Usuário não encontrado");
+            var user = _context.Users.FirstOrDefault(u => u.Id == item.Id) ?? throw new ArgumentException("Usuário não encontrado");
 
             user.Name = item.Name ?? user.Name;
             user.Email = item.Email ?? user.Email;
@@ -90,7 +89,7 @@ namespace Data.Repository
             user.Birthday = item.Birthday ?? user.Birthday;
 
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -99,6 +98,20 @@ namespace Data.Repository
                               join ur in _context.UserRoles on u.Id equals ur.UserId
                               join r in _context.Roles on ur.RoleId equals r.Id
                               where u.Id == id && r.Name == "Person"
+                              select u).FirstOrDefaultAsync();
+
+            if (user == null) throw new ArgumentException("Usuário não encontrado");
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteUserAsync(Guid id)
+        {
+            var user = await (from u in _context.Users
+                              where u.Id == id
                               select u).FirstOrDefaultAsync();
 
             if (user == null) throw new ArgumentException("Usuário não encontrado");

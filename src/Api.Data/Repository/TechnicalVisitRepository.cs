@@ -28,7 +28,7 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> InsertAsync(TechnicalVisit item)
+        public async Task<TechnicalVisit> InsertAsync(TechnicalVisit item)
         {
             try
             {
@@ -36,11 +36,11 @@ namespace Data.Repository
                 item.StatusId = pendingStatus.Id;
                 await _context.TechnicalVisits.AddAsync(item);
 
-                return true;
+                return item;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                throw new ArgumentException(ex.Message);
             }
 ;
         }

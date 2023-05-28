@@ -56,7 +56,7 @@ namespace Api.Data.Test
 
             var isCreated = await _repository.InsertAsync(property);
             var propertyCreated = await _repository.SelectAsync(property.Id);
-            Assert.True(isCreated);
+            Assert.NotNull(isCreated);
             Assert.Equal(propertyCreated.Id, property.Id);
             Assert.Equal(propertyCreated.Street, property.Street);
             Assert.Equal(propertyCreated.Number, property.Number);
