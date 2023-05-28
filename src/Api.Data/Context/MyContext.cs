@@ -1,6 +1,5 @@
 using Api.Data.Mappings;
 using Api.Domain.Entities;
-using Data.Mappings;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

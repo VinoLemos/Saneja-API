@@ -46,7 +46,7 @@ namespace Application.Controllers
                 EmailConfirmed = false,
                 Birthday = create.BirthDay,
                 Rg = create.Rg,
-                Cpf = (int)create.Cpf,
+                Cpf = create.Cpf,
                 PhoneNumber = create.PhoneNumber
             };
 

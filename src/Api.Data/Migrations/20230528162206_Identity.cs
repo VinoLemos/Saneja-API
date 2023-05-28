@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -47,7 +48,8 @@ namespace Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Rg = table.Column<string>(type: "VARCHAR(9)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Cpf = table.Column<int>(type: "int", nullable: false),
+                    Cpf = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Birthday = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -73,6 +75,22 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Visit_Status",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visit_Status", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -114,6 +132,8 @@ namespace Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Cep = table.Column<int>(type: "int", maxLength: 8, nullable: true),
                     City = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UF = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Rgi = table.Column<int>(type: "int", nullable: false),
                     Hidrometer = table.Column<int>(type: "int", nullable: false),
@@ -237,7 +257,7 @@ namespace Data.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     ResidencialPropertyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     VisitDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Homologated = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -262,6 +282,12 @@ namespace Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Technical_Visit_Visit_Status_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Visit_Status",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -270,9 +296,20 @@ namespace Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("79fff86f-6877-48e4-a5a3-fdcb1e02724e"), null, "Person", "PERSON" },
-                    { new Guid("9e2fc035-d064-4475-afff-e7eaa0285769"), null, "Admin", "ADMIN" },
-                    { new Guid("d82721be-6a86-463e-b21c-d3d5a6431da2"), null, "Agent", "AGENT" }
+                    { new Guid("3d80b827-43ba-4d45-962c-92235bc7a0a9"), null, "Agent", "AGENT" },
+                    { new Guid("8f52f193-b32d-4f3b-a221-56200924c5fd"), null, "Person", "PERSON" },
+                    { new Guid("9f0baa75-96cd-4a2e-88ea-a0885ff0c9c9"), null, "Supervisor", "SUPERVISOR" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Visit_Status",
+                columns: new[] { "Id", "CreatedAt", "Status", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { new Guid("1d4469f6-3818-4d62-a5bb-fdce86716134"), null, "Canceled", null },
+                    { new Guid("a2d493c5-3104-4df3-97cb-74402bf2fadd"), null, "Finished", null },
+                    { new Guid("c74101eb-6f5d-487a-a01f-59070bce29ef"), null, "Pending", null },
+                    { new Guid("ee1627e5-bb4a-4408-b634-4c81059c1638"), null, "In Progress", null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -301,6 +338,11 @@ namespace Data.Migrations
                 name: "IX_Technical_Visit_ResidencialPropertyId",
                 table: "Technical_Visit",
                 column: "ResidencialPropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Technical_Visit_StatusId",
+                table: "Technical_Visit",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Technical_Visit_UserId",
@@ -357,6 +399,9 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Residential_Property");
+
+            migrationBuilder.DropTable(
+                name: "Visit_Status");
 
             migrationBuilder.DropTable(
                 name: "Roles");

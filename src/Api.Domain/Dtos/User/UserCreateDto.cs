@@ -12,7 +12,7 @@ namespace Domain.Dtos.User
         public string ConfirmedPassword { get; set; }
         public string Name { get; set; }
         public string Rg { get; set; }
-        public long Cpf { get; set; }
+        public string Cpf { get; set; }
         public DateTime BirthDay { get; set; }
         public string PhoneNumber { get; set; }
     }

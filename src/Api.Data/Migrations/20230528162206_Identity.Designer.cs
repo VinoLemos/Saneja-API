@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20230524012317_Visit Status fk")]
-    partial class VisitStatusfk
+    [Migration("20230528162206_Identity")]
+    partial class Identity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,10 +109,7 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("StatusId1")
+                    b.Property<Guid>("StatusId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -128,7 +125,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ResidencialPropertyId");
 
-                    b.HasIndex("StatusId1");
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -151,8 +148,9 @@ namespace Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Cpf")
-                        .HasColumnType("int");
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -242,22 +240,22 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0e52f812-32f8-4f59-97f0-003b1c21e385"),
+                            Id = new Guid("c74101eb-6f5d-487a-a01f-59070bce29ef"),
                             Status = "Pending"
                         },
                         new
                         {
-                            Id = new Guid("b678b444-4422-4b26-b26b-dd6c7220fbcf"),
+                            Id = new Guid("ee1627e5-bb4a-4408-b634-4c81059c1638"),
                             Status = "In Progress"
                         },
                         new
                         {
-                            Id = new Guid("e0a2eb2b-2b51-4e47-a7ca-b6afa3c966b5"),
+                            Id = new Guid("a2d493c5-3104-4df3-97cb-74402bf2fadd"),
                             Status = "Finished"
                         },
                         new
                         {
-                            Id = new Guid("03448e09-4d57-4f05-b0c2-ec1b10d7691d"),
+                            Id = new Guid("1d4469f6-3818-4d62-a5bb-fdce86716134"),
                             Status = "Canceled"
                         });
                 });
@@ -291,19 +289,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("195f6141-21da-4c28-a9c5-d79ec6658b91"),
+                            Id = new Guid("9f0baa75-96cd-4a2e-88ea-a0885ff0c9c9"),
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = new Guid("ce397ceb-fa1e-4d44-8e75-0242e198cc30"),
+                            Id = new Guid("3d80b827-43ba-4d45-962c-92235bc7a0a9"),
                             Name = "Agent",
                             NormalizedName = "AGENT"
                         },
                         new
                         {
-                            Id = new Guid("fe6c9d53-7807-4014-b9ee-b7d57b617b55"),
+                            Id = new Guid("8f52f193-b32d-4f3b-a221-56200924c5fd"),
                             Name = "Person",
                             NormalizedName = "PERSON"
                         });
@@ -429,7 +427,7 @@ namespace Data.Migrations
 
                     b.HasOne("Domain.Entities.VisitStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId1")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

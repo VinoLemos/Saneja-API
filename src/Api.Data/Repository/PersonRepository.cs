@@ -13,9 +13,31 @@ namespace Data.Repository
         {
             _context = context;
         }
-        public Task<bool> InsertAsync(User item)
+        public async Task<bool> InsertAsync(User item)
         {
-            throw new NotImplementedException();
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = item.Email,
+                Name = item.Name,
+                Email = item.Email,
+                EmailConfirmed = false,
+                Birthday = item.Birthday,
+                Rg = item.Rg,
+                Cpf = item.Cpf,
+                PhoneNumber = item.PhoneNumber
+            };
+
+            try
+            {
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<User> SelectAsync(Guid id)
@@ -25,6 +47,15 @@ namespace Data.Repository
                               join r in _context.Roles on ur.RoleId equals r.Id
                               where u.Id == id && r.Name == "Person"
                               select u).FirstOrDefaultAsync();
+
+            return user ?? throw new ArgumentException("Usuário não encontrado");
+        }
+
+        public async Task<User> SelectUserAsync(Guid id)
+        {
+            var user = await (from u in _context.Users
+                          where u.Id == id
+                          select u).FirstOrDefaultAsync();
 
             return user ?? throw new ArgumentException("Usuário não encontrado");
         }

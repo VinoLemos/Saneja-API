@@ -19,7 +19,7 @@ namespace Api.Domain.Entities
         public override string Email { get; set; }
         [Column(TypeName = "VARCHAR(9)")]
         public string? Rg { get; set; }
-        public int Cpf { get; set; }
+        public string Cpf { get; set; }
         public DateTime? Birthday { get; set; }
     }
 }
