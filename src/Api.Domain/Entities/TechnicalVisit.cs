@@ -9,7 +9,7 @@ namespace Api.Domain.Entities
         public Guid ResidencialPropertyId { get; set; }
         public virtual ResidentialProperty ResidencialProperty { get; set; }
         [ForeignKey("Users")]
-        public Guid UserId { get; set; } // Id do agente responsável pela visita
+        public Guid? UserId { get; set; } // Id do agente responsável pela visita
         public virtual User Agent { get; set; }
         [ForeignKey("Visit_Status")]
         public Guid StatusId { get; set; }

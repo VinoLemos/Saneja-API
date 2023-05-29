@@ -34,7 +34,8 @@ namespace Data.Repository
             {
                 var pendingStatus = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Pending");
                 item.StatusId = pendingStatus.Id;
-                await _context.TechnicalVisits.AddAsync(item);
+                var created = await _context.TechnicalVisits.AddAsync(item);
+                await _context.SaveChangesAsync();
 
                 return item;
             }
@@ -48,12 +49,6 @@ namespace Data.Repository
         public async Task<TechnicalVisit> SelectAsync(Guid id)
         {
             var visit = await _context.TechnicalVisits.FirstOrDefaultAsync(t => t.Id == id);
-
-            var inProgress = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "In Progress");
-            var canceled = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Canceled");
-
-            if (visit.StatusId == inProgress.Id) throw new ArgumentException("Só é possível cancelar visitas pendentes.");
-            if (visit.StatusId == canceled.Id) throw new ArgumentException("Visita já cancelada.");
 
             return visit ?? throw new ArgumentException("Visita não encontrada.");
         }
@@ -130,6 +125,8 @@ namespace Data.Repository
                 visit.Homologated = true;
                 visit.HomologationDate = DateTime.UtcNow;
 
+                _context.SaveChanges();
+
                 return true;
             }
             catch (Exception)
@@ -142,7 +139,7 @@ namespace Data.Repository
         {
             try
             {
-                var visit = _context.TechnicalVisits.FirstOrDefault(v => v.Id == agentId);
+                var visit = _context.TechnicalVisits.FirstOrDefault(v => v.Id == visitId);
 
                 if (visit == null) throw new ArgumentException("Visita inválida");
 
@@ -171,15 +168,21 @@ namespace Data.Repository
             }
         }
 
-        public bool CancelVisit(Guid visitId)
+        public async Task<bool> CancelVisit(Guid visitId)
         {
             try
             {
                 var visit = (_context?.TechnicalVisits.FirstOrDefault(v => v.Id == visitId)) ?? throw new ArgumentException("Visita não encontrada.");
 
-                var canceledStatus = _context.VisitStatuses.FirstOrDefault(vt => vt.Status == "Canceled") ?? throw new ArgumentException("Status não encontrado");
+                var inProgress = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "In Progress");
+                var canceled = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Canceled");
 
-                visit.StatusId = canceledStatus.Id; // Cancelada
+                if (visit.StatusId == inProgress.Id) throw new ArgumentException("Só é possível cancelar visitas pendentes.");
+                if (visit.StatusId == canceled.Id) throw new ArgumentException("Visita já cancelada.");
+
+                visit.StatusId = canceled.Id; // Cancelada
+
+                await _context.SaveChangesAsync();
 
                 return true;
 

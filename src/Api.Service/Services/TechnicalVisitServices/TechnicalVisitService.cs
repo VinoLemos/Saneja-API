@@ -71,7 +71,7 @@ namespace Api.Service.Services.TechnicalVisitServices
 
                 if (visit == null) throw new ArgumentException("Visita não encontrada.");
 
-                return _repository.CancelVisit(visitId);
+                return await _repository.CancelVisit(visitId);
             }
             catch (Exception)
             {

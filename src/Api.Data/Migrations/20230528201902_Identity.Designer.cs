@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20230528162206_Identity")]
+    [Migration("20230528201902_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -115,7 +115,7 @@ namespace Data.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("VisitDate")
@@ -240,22 +240,22 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c74101eb-6f5d-487a-a01f-59070bce29ef"),
+                            Id = new Guid("442ed696-b819-493f-aab8-b754104673c6"),
                             Status = "Pending"
                         },
                         new
                         {
-                            Id = new Guid("ee1627e5-bb4a-4408-b634-4c81059c1638"),
+                            Id = new Guid("386dcac8-e70b-42b7-990a-f6822c822245"),
                             Status = "In Progress"
                         },
                         new
                         {
-                            Id = new Guid("a2d493c5-3104-4df3-97cb-74402bf2fadd"),
+                            Id = new Guid("a63ddc8b-3a81-4bcc-b2c4-71a6089e776b"),
                             Status = "Finished"
                         },
                         new
                         {
-                            Id = new Guid("1d4469f6-3818-4d62-a5bb-fdce86716134"),
+                            Id = new Guid("3b61677a-9b53-43f5-a74b-de48c4d2c6ed"),
                             Status = "Canceled"
                         });
                 });
@@ -289,19 +289,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9f0baa75-96cd-4a2e-88ea-a0885ff0c9c9"),
+                            Id = new Guid("e59463b8-0c73-4b56-9b5b-52344980bd1f"),
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = new Guid("3d80b827-43ba-4d45-962c-92235bc7a0a9"),
+                            Id = new Guid("5506d35c-a5d2-44f5-b0bb-70953dfcced2"),
                             Name = "Agent",
                             NormalizedName = "AGENT"
                         },
                         new
                         {
-                            Id = new Guid("8f52f193-b32d-4f3b-a221-56200924c5fd"),
+                            Id = new Guid("563191b8-5dec-4253-b5d2-8cddba6b79ce"),
                             Name = "Person",
                             NormalizedName = "PERSON"
                         });
@@ -433,9 +433,7 @@ namespace Data.Migrations
 
                     b.HasOne("Api.Domain.Entities.User", "Agent")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Agent");
 

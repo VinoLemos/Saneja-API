@@ -47,7 +47,7 @@ namespace Data.Repository
                               where u.Id == id && r.Name == "Person"
                               select u).FirstOrDefaultAsync();
 
-            return user ?? throw new ArgumentException("Usuário não encontrado");
+            return user ?? null;
         }
 
         public async Task<User> SelectUserAsync(Guid id)

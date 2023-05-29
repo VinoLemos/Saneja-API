@@ -27,12 +27,16 @@ namespace Service.Services.AgentServices
         {
             var user = await _repository.SelectAsync(id);
 
+            if (user == null) throw new ArgumentException("Usuário não encontrado");
+
             return _mapper.Map<UserDto>(user);
         }
 
         public async Task<UserDetailsDto> ReadUserDetails(Guid id)
         {
             var user = await _repository.SelectAsync(id);
+
+            if (user == null) throw new ArgumentException("Usuário não encontrado");
 
             return _mapper.Map<UserDetailsDto>(user);
         }

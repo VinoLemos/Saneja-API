@@ -1,6 +1,7 @@
 ﻿using Api.Data.Context;
 using Api.Domain.Entities;
 using Data.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Data.Test
@@ -34,6 +35,7 @@ namespace Api.Data.Test
                 PhoneNumber = "1234567890"
             };
 
+
             var personCreated = await _repository.InsertAsync(newPerson);
             Assert.NotNull(personCreated);
 
@@ -50,19 +52,35 @@ namespace Api.Data.Test
             Assert.Equal(newPerson.Cpf, personCreated.Cpf);
             Assert.Equal(newPerson.PhoneNumber, personCreated.PhoneNumber);
 
+            var role = context.Roles.FirstOrDefault(r => r.Name == "Person");
+            Assert.NotNull(role);
+
+            // Assign role
+            var userRole = new IdentityUserRole<Guid>
+            {
+                RoleId = role.Id,
+                UserId = personRetrieved.Id
+            };
+
+            context.UserRoles.Add(userRole);
+            context.SaveChanges();
+
+            var userRoleRetrieved = context.UserRoles.FirstOrDefault(ur => ur.UserId == personRetrieved.Id);
+            Assert.NotNull(userRoleRetrieved);
+
             // Update operation
             personRetrieved.Name = "UpdatedName";
             _repository.UpdateAsync(personRetrieved);
 
             // Retrieve the updated user
-            var updatedUser = await _repository.SelectUserAsync(personRetrieved.Id);
+            var updatedUser = await _repository.SelectAsync(personRetrieved.Id);
             Assert.NotNull(updatedUser);
             Assert.Equal(personRetrieved.Name, updatedUser.Name);
 
             // Delete operation
-            var isDeleted = await _repository.DeleteUserAsync(updatedUser.Id);
+            var isDeleted = await _repository.DeleteAsync(updatedUser.Id);
 
-            var deletedUser = await _repository.SelectUserAsync(updatedUser.Id);
+            var deletedUser = await _repository.SelectAsync(updatedUser.Id);
             Assert.True(isDeleted);
             Assert.Null(deletedUser);
         }

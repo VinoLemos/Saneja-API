@@ -256,7 +256,7 @@ namespace Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     ResidencialPropertyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     StatusId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     VisitDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -280,8 +280,7 @@ namespace Data.Migrations
                         name: "FK_Technical_Visit_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Technical_Visit_Visit_Status_StatusId",
                         column: x => x.StatusId,
@@ -296,9 +295,9 @@ namespace Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("3d80b827-43ba-4d45-962c-92235bc7a0a9"), null, "Agent", "AGENT" },
-                    { new Guid("8f52f193-b32d-4f3b-a221-56200924c5fd"), null, "Person", "PERSON" },
-                    { new Guid("9f0baa75-96cd-4a2e-88ea-a0885ff0c9c9"), null, "Supervisor", "SUPERVISOR" }
+                    { new Guid("5506d35c-a5d2-44f5-b0bb-70953dfcced2"), null, "Agent", "AGENT" },
+                    { new Guid("563191b8-5dec-4253-b5d2-8cddba6b79ce"), null, "Person", "PERSON" },
+                    { new Guid("e59463b8-0c73-4b56-9b5b-52344980bd1f"), null, "Supervisor", "SUPERVISOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -306,10 +305,10 @@ namespace Data.Migrations
                 columns: new[] { "Id", "CreatedAt", "Status", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("1d4469f6-3818-4d62-a5bb-fdce86716134"), null, "Canceled", null },
-                    { new Guid("a2d493c5-3104-4df3-97cb-74402bf2fadd"), null, "Finished", null },
-                    { new Guid("c74101eb-6f5d-487a-a01f-59070bce29ef"), null, "Pending", null },
-                    { new Guid("ee1627e5-bb4a-4408-b634-4c81059c1638"), null, "In Progress", null }
+                    { new Guid("386dcac8-e70b-42b7-990a-f6822c822245"), null, "In Progress", null },
+                    { new Guid("3b61677a-9b53-43f5-a74b-de48c4d2c6ed"), null, "Canceled", null },
+                    { new Guid("442ed696-b819-493f-aab8-b754104673c6"), null, "Pending", null },
+                    { new Guid("a63ddc8b-3a81-4bcc-b2c4-71a6089e776b"), null, "Finished", null }
                 });
 
             migrationBuilder.CreateIndex(

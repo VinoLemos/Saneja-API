@@ -22,7 +22,16 @@ namespace Data.Repository
                               where u.Id == id && r.Name == "Agent"
                               select u).FirstOrDefaultAsync();
 
-            return user ?? throw new ArgumentException("Usuário não encontrado");
+            return user ?? null;
+        }
+
+        public async Task<User> SelectUserAsync(Guid id)
+        {
+            var user = await (from u in _context.Users
+                              where u.Id == id
+                              select u).FirstOrDefaultAsync();
+
+            return user ?? null;
         }
 
         public async Task<IEnumerable<User>> SelectAsync()
@@ -75,9 +84,30 @@ namespace Data.Repository
             return true;
         }
 
-        public Task<User> InsertAsync(User item)
+        public async Task<User> InsertAsync(User item)
         {
-            throw new NotImplementedException();
+            var user = new User
+            {
+                UserName = item.Email,
+                Name = item.Name,
+                Email = item.Email,
+                EmailConfirmed = false,
+                Birthday = item.Birthday,
+                Rg = item.Rg,
+                Cpf = item.Cpf,
+                PhoneNumber = item.PhoneNumber
+            };
+
+            try
+            {
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 }
