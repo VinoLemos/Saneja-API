@@ -1,6 +1,8 @@
 ﻿using Api.Domain.Dtos;
 using Api.Domain.Entities;
 using Domain.Dtos.User;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.TokenServices;
@@ -61,25 +63,61 @@ namespace Application.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Supervisor")]
         [HttpPost]
         [Route("register-agent")]
-        public async Task<IActionResult> RegisterAgent([FromBody] UserCreateDto login)
+        public async Task<IActionResult> RegisterAgent([FromBody] UserCreateDto create)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
             var user = new User
             {
-                UserName = login.Email,
-                Email = login.Email,
-                EmailConfirmed = false
+                UserName = create.Email,
+                Name = create.Name,
+                Email = create.Email,
+                EmailConfirmed = false,
+                Birthday = create.BirthDay,
+                Rg = create.Rg,
+                Cpf = create.Cpf,
+                PhoneNumber = create.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, login.Password);
+            var result = await _userManager.CreateAsync(user, create.Password);
 
             if (!result.Succeeded) return BadRequest(result.Errors);
 
             await _userManager.AddToRoleAsync(user, "Agent");
+
+            await _signInManager.SignInAsync(user, false);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("register-supervisor")]
+        public async Task<IActionResult> RegisterSupervisor([FromBody] UserCreateDto create)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+
+            var user = new User
+            {
+                UserName = create.Email,
+                Name = create.Name,
+                Email = create.Email,
+                EmailConfirmed = false,
+                Birthday = create.BirthDay,
+                Rg = create.Rg,
+                Cpf = create.Cpf,
+                PhoneNumber = create.PhoneNumber
+            };
+
+            var result = await _userManager.CreateAsync(user, create.Password);
+
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            await _userManager.AddToRoleAsync(user, "Supervisor");
 
             await _signInManager.SignInAsync(user, false);
 
