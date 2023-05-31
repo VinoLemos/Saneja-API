@@ -28,9 +28,13 @@ namespace Api.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "Server=localhost;Database=saneja_api_dev;Uid=root;Pwd=1234";
+            //var connectionString = "Server=localhost;Database=saneja_api_dev;Uid=root;Pwd=1234";
+            var connectionString = "";
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-                connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+                connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            else if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                connectionString = Environment.GetEnvironmentVariable("DevelopmentConnection");
+            else connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
 
             if (!optionsBuilder.IsConfigured)
                 optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
