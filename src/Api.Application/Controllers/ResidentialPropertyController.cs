@@ -81,7 +81,7 @@ namespace Application.Controllers
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
             try
             {
-                var created = await _service.Post(obj);
+                var created = await _service.Post(obj, ReadUserId());
 
                 if (!created) return BadRequest("Imóvel não registrado");
 

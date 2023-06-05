@@ -192,5 +192,10 @@ namespace Data.Repository
                 return false;
             }
         }
+
+        public Task<TechnicalVisit> InsertAsync(TechnicalVisit item, Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

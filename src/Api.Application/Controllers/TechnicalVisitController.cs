@@ -21,6 +21,24 @@ namespace Application.Controllers
             _service = service;
         }
 
+        [HttpPost]
+        [Route("request-visit")]
+        public async Task<IActionResult> RequestVisit(TechnicalVisitCreateDto visit)
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var visitCreated = await _service.Post(visit, ReadUserId());
+
+                return visitCreated ? Ok() : BadRequest("Visita não cadastrada.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
         [HttpGet]
         [Route("get-visit")]
         public async Task<IActionResult> GetVisit(Guid id)
@@ -44,13 +62,13 @@ namespace Application.Controllers
         [Authorize(Roles = "Agent")]
         [HttpGet]
         [Route("get-agent-visits")]
-        public async Task<IActionResult> GetAgentVisits([FromHeader] Guid agentId)
+        public async Task<IActionResult> GetAgentVisits()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var visits = await _service.GetAgentVisits(agentId);
+                var visits = await _service.GetAgentVisits(ReadUserId());
 
                 if (visits == null) return NoContent();
 

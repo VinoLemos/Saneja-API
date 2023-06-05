@@ -23,8 +23,9 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<ResidentialProperty> InsertAsync(ResidentialProperty item)
+        public async Task<ResidentialProperty> InsertAsync(ResidentialProperty item, Guid id)
         {
+            item.PersonId = id;
             await _context.ResidencialProperties.AddAsync(item);
             await _context.SaveChangesAsync();
 
@@ -74,6 +75,11 @@ namespace Data.Repository
             currentProperty.City = item.City;
             currentProperty.Complement = item.Complement;
             currentProperty.CreatedAt = DateTime.Now;
+        }
+
+        public Task<ResidentialProperty> InsertAsync(ResidentialProperty item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

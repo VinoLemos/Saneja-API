@@ -2,7 +2,6 @@
 using Api.Domain.Entities;
 using Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Api.Data.Test
 {
@@ -50,11 +49,10 @@ namespace Api.Data.Test
                 City = "City",
                 UF = "SP",
                 Rgi = 321425678,
-                Hidrometer = 21345678,
-                PersonId = dummyPersonId  // Use the dummy person's Id
+                Hidrometer = 21345678
             };
 
-            var isCreated = await _repository.InsertAsync(property);
+            var isCreated = await _repository.InsertAsync(property, dummyPerson.Id);
             var propertyCreated = await _repository.SelectAsync(property.Id);
             Assert.NotNull(isCreated);
             Assert.Equal(propertyCreated.Id, property.Id);

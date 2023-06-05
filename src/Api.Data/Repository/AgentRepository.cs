@@ -109,5 +109,10 @@ namespace Data.Repository
                 throw new ArgumentException(ex.Message);
             }
         }
+
+        public Task<User> InsertAsync(User item, Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

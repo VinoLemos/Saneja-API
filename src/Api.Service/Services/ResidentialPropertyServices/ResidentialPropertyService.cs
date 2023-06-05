@@ -36,12 +36,12 @@ namespace Api.Service.Services.ResidencialPropertyServices
             return propertyList;
         }
 
-        public async Task<bool> Post(ResidentialPropertyDto residentialProperty)
+        public async Task<bool> Post(ResidentialPropertyDto residentialProperty, Guid personId)
         {
             try
             {
                 var property = _mapper.Map<ResidentialProperty>(residentialProperty);
-                var newProperty = await _repository.InsertAsync(property);
+                var newProperty = await _repository.InsertAsync(property, personId);
 
                 return true;
             }

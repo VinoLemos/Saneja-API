@@ -121,5 +121,10 @@ namespace Data.Repository
 
             return true;
         }
+
+        public Task<User> InsertAsync(User item, Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

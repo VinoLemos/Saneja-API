@@ -34,12 +34,20 @@ namespace Api.Service.Services.TechnicalVisitServices
             return visitsDto;
         }
 
-        public async Task<bool> Post(TechnicalVisitDto technicalVisit)
+        public async Task<bool> Post(TechnicalVisitCreateDto technicalVisit, Guid userId)
         {
-            var visit = _mapper.Map<TechnicalVisit>(technicalVisit);
-            var created = await _repository.InsertAsync(visit);
+            try
+            {
+                var visit = _mapper.Map<TechnicalVisit>(technicalVisit);
+                var created = await _repository.InsertAsync(visit, userId);
 
-            return created != null;
+                return created != null;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ArgumentException(ex.Message);
+            }
         }
 
         public bool AcceptVisit(Guid visitId, Guid agentId)

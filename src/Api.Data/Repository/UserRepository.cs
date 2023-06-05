@@ -46,5 +46,10 @@ namespace Api.Data.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Task<User> InsertAsync(User item, Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
