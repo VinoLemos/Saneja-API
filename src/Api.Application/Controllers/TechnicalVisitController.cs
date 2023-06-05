@@ -21,6 +21,7 @@ namespace Application.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Person")]
         [HttpPost]
         [Route("request-visit")]
         public async Task<IActionResult> RequestVisit(TechnicalVisitCreateDto visit)
