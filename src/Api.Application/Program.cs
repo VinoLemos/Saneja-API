@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-    var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -62,8 +62,18 @@ builder.Services.AddSwaggerGen(c =>
 });
 #endregion
 
-builder.Services.AddCors();
+#region Cors Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+    builder => builder
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
+#endregion
 
+#region Auth configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -84,6 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.SaveToken = true; // Save JWT token in the authentication properties
         options.TokenValidationParameters.ClockSkew = TimeSpan.Zero; // Disable clock skew
     });
+#endregion
 
 
 var app = builder.Build();
@@ -107,7 +118,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyMethod());
+app.UseCors("AllowAnyOrigin");
 
 app.MapControllers();
 
