@@ -5,7 +5,7 @@
         public Guid Id { get; set; }
         public Guid ResidentialPropertyId { get; set; }
         public Guid? UserId { get; set; }
-        public int StatusId { get; set; }
+        public Guid StatusId { get; set; }
         public string Status { get; set; }
         public DateTime VisitDate { get; set; }
         public DateTime? ReturnDate { get; set; }

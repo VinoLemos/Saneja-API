@@ -56,12 +56,12 @@ namespace Application.Controllers
 
         [HttpGet]
         [Route("get-property-by-rgi")]
-        public async Task<IActionResult> GetByRgi([FromRoute] int? rgi)
+        public async Task<IActionResult> GetByRgi([FromHeader] int rgi)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
-            if (rgi == null) return BadRequest("RGI inválido");
 
+            if (rgi == 0) return BadRequest("RGI inválido");
             try
             {
                 var imovel = await _service.GetByRgi(rgi);
@@ -81,7 +81,7 @@ namespace Application.Controllers
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
             try
             {
-                var created = await _service.Post(obj, ReadUserId());
+                var created = await _service.Post(obj);
 
                 if (!created) return BadRequest("Imóvel não registrado");
 

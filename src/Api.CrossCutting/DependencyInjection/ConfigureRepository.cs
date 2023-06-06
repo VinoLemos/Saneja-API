@@ -15,6 +15,9 @@ namespace Api.CrossCutting.DependencyInjection
                     b => b.MigrationsAssembly(migrationAssembly)));
 
             services.AddScoped(typeof(PersonRepository));
+            services.AddScoped(typeof(AgentRepository));
+            services.AddScoped(typeof(ResidentialPropertyRepository));
+            services.AddScoped(typeof(TechnicalVisitRepository));
         }
     }
 }

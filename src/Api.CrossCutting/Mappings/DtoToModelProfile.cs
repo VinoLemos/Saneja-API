@@ -1,5 +1,6 @@
 ﻿using Api.Domain.Entities;
 using AutoMapper;
+using Domain.Dtos.ResidentialPropertyDtos;
 using Domain.Dtos.TechnicalVisitDtos;
 using Domain.Dtos.User;
 using Domain.Models;
@@ -15,6 +16,8 @@ namespace CrossCutting.Mappings
             CreateMap<UserModel, UserUpdateDto>().ReverseMap();
             CreateMap<UserModel, UserDetailsDto>().ReverseMap();
             CreateMap<TechnicalVisit, TechnicalVisitDto>().ReverseMap();
+            CreateMap<TechnicalVisit, TechnicalVisitCreateDto>().ReverseMap();
+            CreateMap<ResidentialProperty, ResidentialPropertyDto>().ReverseMap();
         }
     }
 }

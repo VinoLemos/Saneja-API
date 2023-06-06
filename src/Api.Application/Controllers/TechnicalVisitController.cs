@@ -30,7 +30,7 @@ namespace Application.Controllers
 
             try
             {
-                var visitCreated = await _service.Post(visit, ReadUserId());
+                var visitCreated = await _service.Post(visit);
 
                 return visitCreated ? Ok() : BadRequest("Visita não cadastrada.");
             }
@@ -70,6 +70,27 @@ namespace Application.Controllers
             try
             {
                 var visits = await _service.GetAgentVisits(ReadUserId());
+
+                if (visits == null) return NoContent();
+
+                return Ok(visits);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize(Roles = "Person")]
+        [HttpGet]
+        [Route("get-person-visits")]
+        public async Task<IActionResult> GetPersonVisits()
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var visits = await _service.GetPersonVisits(ReadUserId());
 
                 if (visits == null) return NoContent();
 

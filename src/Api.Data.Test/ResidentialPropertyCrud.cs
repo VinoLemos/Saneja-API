@@ -84,6 +84,10 @@ namespace Api.Data.Test
             var returned = await _repository.SelectAsync(propertyCreated.Id);
             Assert.NotNull(returned);
 
+            // Retrieve User Properties
+            var properties = await _repository.SelectUserProperties(dummyPerson.Id);
+            Assert.NotNull(properties);
+
             // Delete operation
             //await _repository.DeleteAsync(propertyUpdated.Id); // Not implemented
             //var propertyDeleted = await _repository.SelectAsync(propertyUpdated.Id);

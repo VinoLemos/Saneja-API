@@ -1,8 +1,11 @@
 using Api.Data.Context;
 using Api.Domain.Entities;
+using Api.Service.Services.ResidencialPropertyServices;
+using Api.Service.Services.TechnicalVisitServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Service.Services.AgentServices;
 using Service.Services.PersonServices;
 using Service.Services.TokenServices;
 using System.Reflection;
@@ -38,6 +41,9 @@ namespace Api.CrossCutting.DependencyInjection
             services.AddScoped<UserTokenService>();
 
             services.AddScoped<PersonService>();
+            services.AddScoped<AgentService>();
+            services.AddScoped<ResidentialPropertyService>();
+            services.AddScoped<TechnicalVisitService>();
         }
     }
 }

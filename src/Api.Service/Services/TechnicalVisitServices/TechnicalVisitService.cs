@@ -33,13 +33,42 @@ namespace Api.Service.Services.TechnicalVisitServices
 
             return visitsDto;
         }
+        public async Task<List<TechnicalVisitDto>> GetPersonVisits(Guid personId)
+        {
+            var visits = await _repository.SelectPersonVisits(personId);
 
-        public async Task<bool> Post(TechnicalVisitCreateDto technicalVisit, Guid userId)
+            var visitsDto = new List<TechnicalVisitDto>();
+
+            var visitStatuses = await _repository.SelectStatusListAsync();
+
+            visits.ForEach(v =>
+            {
+                var status = visitStatuses.FirstOrDefault(st => st.Id == v.StatusId);
+
+                visitsDto.Add(new TechnicalVisitDto
+                {
+                    Id = v.Id,
+                    ResidentialPropertyId = v.ResidencialPropertyId,
+                    Homologated = v.Homologated,
+                    HomologationDate = v.HomologationDate,
+                    Observation = v.Observation,
+                    ReturnDate = v.ReturnDate,
+                    StatusId = v.StatusId,
+                    Status = status.Status,
+                    UserId = v.UserId,
+                    VisitDate = v.VisitDate
+                });
+            });
+
+            return visitsDto;
+        }
+
+        public async Task<bool> Post(TechnicalVisitCreateDto technicalVisit)
         {
             try
             {
                 var visit = _mapper.Map<TechnicalVisit>(technicalVisit);
-                var created = await _repository.InsertAsync(visit, userId);
+                var created = await _repository.InsertAsync(visit, technicalVisit.ResidentialPropertyId);
 
                 return created != null;
             }

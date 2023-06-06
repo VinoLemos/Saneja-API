@@ -1,6 +1,7 @@
 ﻿using Api.Data.Context;
 using Api.Data.Repository;
 using Api.Domain.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
@@ -18,6 +19,26 @@ namespace Data.Repository
             _context = context;
         }
 
+        public async Task<TechnicalVisit> InsertAsync(TechnicalVisit item, Guid propertyId)
+        {
+            try
+            {
+                var pendingStatus = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Pending");
+                var property = await _context.ResidencialProperties.FirstOrDefaultAsync(p => p.Id == propertyId);
+
+                item.StatusId = pendingStatus.Id;
+                item.ResidencialPropertyId = property.Id;
+                var created = await _context.TechnicalVisits.AddAsync(item);
+                await _context.SaveChangesAsync();
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
         public Task<bool> DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
@@ -28,21 +49,9 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<TechnicalVisit> InsertAsync(TechnicalVisit item)
+        public Task<TechnicalVisit> InsertAsync(TechnicalVisit item)
         {
-            try
-            {
-                var pendingStatus = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Pending");
-                item.StatusId = pendingStatus.Id;
-                var created = await _context.TechnicalVisits.AddAsync(item);
-                await _context.SaveChangesAsync();
-
-                return item;
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
+            throw new NotImplementedException();
 ;
         }
 
@@ -58,6 +67,10 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<List<VisitStatus>> SelectStatusListAsync()
+        {
+            return await _context.VisitStatuses.ToListAsync();
+        }
 
         public async Task<List<TechnicalVisit>> SelectAgentVisits(Guid agentId)
         {
@@ -65,6 +78,18 @@ namespace Data.Repository
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas para o agente informado.");
         }
+
+        public async Task<List<TechnicalVisit>> SelectPersonVisits(Guid personId)
+        {
+            var visits = await (from v in _context.TechnicalVisits
+                                join properties in _context.ResidencialProperties on v.ResidencialPropertyId equals properties.Id
+                                join user in _context.Users on properties.PersonId equals user.Id
+                                where user.Id == personId
+                                select v).ToListAsync();
+
+            return visits ?? throw new ArgumentException("Não foram encontradas visitas para o agente informado.");
+        }
+
         public async Task<TechnicalVisit> SelectAgentActiveVisit(Guid agentId)
         {
             var visit = await (from v in _context.TechnicalVisits
@@ -191,11 +216,6 @@ namespace Data.Repository
             {
                 return false;
             }
-        }
-
-        public Task<TechnicalVisit> InsertAsync(TechnicalVisit item, Guid id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
