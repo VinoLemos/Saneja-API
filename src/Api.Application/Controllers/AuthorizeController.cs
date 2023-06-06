@@ -1,5 +1,6 @@
 ﻿using Api.Domain.Dtos;
 using Api.Domain.Entities;
+using Domain.Dtos;
 using Domain.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -126,7 +127,7 @@ namespace Application.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> Login([FromBody] LoginDto login)
+        public async Task<ActionResult<UserTokenDto>> Login([FromBody] LoginDto login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
@@ -146,7 +147,10 @@ namespace Application.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            return Ok(_userTokenService.GenerateToken(login, roles.ToList(), user.Id));
+            var objectReturn = _userTokenService.GenerateToken(login, roles.ToList(), user.Id);
+            objectReturn.UserRoles = roles;
+
+            return objectReturn;
         }
     }
 }
