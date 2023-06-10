@@ -25,11 +25,47 @@ namespace Api.Service.Services.TechnicalVisitServices
             return _mapper.Map<TechnicalVisitDto>(visit);
         }
 
+        public async Task<IEnumerable<TechnicalVisitDto>> GetPendingVisits()
+        {
+            var visits = await _repository.SelectPendingVisits();
+
+            var visitsDto = _mapper.Map<List<TechnicalVisitDto>>(visits);
+
+            visitsDto.ForEach(async dto =>
+            {
+                var status = _repository.SelectStatusById(dto.StatusId).Status;
+                dto.Status = status;
+            });
+
+            return visitsDto;
+        }
+
+        public async Task<IEnumerable<TechnicalVisitDto>> SelectCanceledVisits()
+        {
+            var visits = await _repository.SelectCanceledVisits();
+
+            var visitsDto = _mapper.Map<List<TechnicalVisitDto>>(visits);
+
+            visitsDto.ForEach(async dto =>
+            {
+                var status = _repository.SelectStatusById(dto.StatusId).Status;
+                dto.Status = status;
+            });
+
+            return visitsDto;
+        }
+
         public async Task<List<TechnicalVisitDto>> GetAgentVisits(Guid agentId)
         {
             var visits = await _repository.SelectAgentVisits(agentId);
 
             var visitsDto = _mapper.Map<List<TechnicalVisitDto>>(visits);
+
+            visitsDto.ForEach(async dto =>
+            {
+                var status = _repository.SelectStatusById(dto.StatusId).Status;
+                dto.Status = status;
+            });
 
             return visitsDto;
         }
@@ -86,6 +122,13 @@ namespace Api.Service.Services.TechnicalVisitServices
             return accepted;
         }
 
+        public async Task<bool> FinishVisit(Guid visitId)
+        {
+            var finished = await _repository.FinishVisit(visitId);
+
+            return finished;
+        }
+
         public bool PostVisitObservation(TechnicalVisitObservationDto observation)
         {
             try
@@ -106,13 +149,11 @@ namespace Api.Service.Services.TechnicalVisitServices
             {
                 var visit = await _repository.SelectAsync(visitId);
 
-                if (visit == null) throw new ArgumentException("Visita não encontrada.");
-
                 return await _repository.CancelVisit(visitId);
             }
-            catch (Exception)
+            catch (ArgumentException)
             {
-                return false;
+                throw;
             }
         }
 

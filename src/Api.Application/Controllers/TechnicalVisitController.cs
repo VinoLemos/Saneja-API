@@ -21,6 +21,44 @@ namespace Application.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Agent")]
+        [HttpGet]
+        [Route("list-pending-visits")]
+        public async Task<IActionResult> ListPendingVisits()
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var visits = await _service.GetPendingVisits();
+
+                return visits.Count() > 0 ? Ok(visits) : BadRequest("Não foram encontradas visitas pendentes.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Agent")]
+        [HttpPut]
+        [Route("finish-visit")]
+        public async Task<IActionResult> FinishVisit([FromHeader] Guid visitId)
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var finished = await _service.FinishVisit(visitId);
+
+                return finished ? Ok() : BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         [Authorize(Roles = "Person")]
         [HttpPost]
         [Route("request-visit")]
@@ -103,6 +141,27 @@ namespace Application.Controllers
         }
 
         [Authorize(Roles = "Agent")]
+        [HttpGet]
+        [Route("get-canceled-visits")]
+        public async Task<IActionResult> GetCanceledVisits()
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var visits = await _service.SelectCanceledVisits();
+
+                if (visits == null) return NoContent();
+
+                return Ok(visits);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize(Roles = "Agent")]
         [HttpPut]
         [Route("accept-visit")]
         public IActionResult AcceptVisit([FromHeader] Guid visitId)
@@ -143,13 +202,17 @@ namespace Application.Controllers
 
         [HttpPut]
         [Route("cancel-visit")]
-        public async Task<IActionResult> CancelVisit([FromHeader] Guid id)
+        public async Task<IActionResult> CancelVisit([FromHeader] Guid visitId)
         {
             try
             {
-                var canceled = await _service.CancelVisit(id);
+                var canceled = await _service.CancelVisit(visitId);
 
                 return canceled ? Ok() : BadRequest();
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (Exception e)
             {

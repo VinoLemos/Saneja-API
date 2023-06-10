@@ -9,10 +9,6 @@ namespace Data.Repository
     public class TechnicalVisitRepository : IBaseRepository<TechnicalVisit>
     {
         private readonly MyContext _context;
-        private const int Pending = 1;
-        private const int InProgress = 2;
-        private const int Finished = 3;
-        private const int Canceled = 1;
 
         public TechnicalVisitRepository(MyContext context)
         {
@@ -53,6 +49,11 @@ namespace Data.Repository
         {
             throw new NotImplementedException();
 ;
+        }
+
+        public VisitStatus? SelectStatusById(Guid statusId)
+        {
+            return _context.VisitStatuses.FirstOrDefault(v => v.Id == statusId);
         }
 
         public async Task<TechnicalVisit> SelectAsync(Guid id)
@@ -193,6 +194,26 @@ namespace Data.Repository
             }
         }
 
+        public async Task<bool> FinishVisit(Guid visitId)
+        {
+            var visit = await _context.TechnicalVisits.FirstOrDefaultAsync(v => v.Id == visitId);
+
+            if (visit == null) throw new ArgumentException("Visita não encontrada.");
+
+            var InProgressStatus = await _context.VisitStatuses.FirstOrDefaultAsync(vs => vs.Status == "In Progress");
+
+            if (visit.StatusId != InProgressStatus.Id) throw new ArgumentException("Só é possível finalizar visitas em progresso.");
+
+            var finishedStatus = await _context.VisitStatuses.FirstOrDefaultAsync(vs => vs.Status == "Finished");
+
+            visit.StatusId = finishedStatus.Id;
+
+            _context.Update(visit);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> CancelVisit(Guid visitId)
         {
             try
@@ -201,9 +222,11 @@ namespace Data.Repository
 
                 var inProgress = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "In Progress");
                 var canceled = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Canceled");
+                var finished = await _context.VisitStatuses.FirstOrDefaultAsync(vt => vt.Status == "Finished");
 
                 if (visit.StatusId == inProgress.Id) throw new ArgumentException("Só é possível cancelar visitas pendentes.");
                 if (visit.StatusId == canceled.Id) throw new ArgumentException("Visita já cancelada.");
+                if (visit.StatusId == finished.Id) throw new ArgumentException("Visita já finalizada.");
 
                 visit.StatusId = canceled.Id; // Cancelada
 
@@ -212,9 +235,9 @@ namespace Data.Repository
                 return true;
 
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                return false;
+                throw ex;
             }
         }
     }
