@@ -60,24 +60,40 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
-        public async void UpdateAsync(ResidentialProperty item)
+        public async Task<bool> UpdateAsync(ResidentialProperty item)
         {
-            var currentProperty = await _context.ResidencialProperties.FirstOrDefaultAsync(r => r.Id.Equals(item.Id));
+            try
+            {
+                var currentProperty = await _context.ResidencialProperties.FirstOrDefaultAsync(r => r.Id.Equals(item.Id));
 
-            if (currentProperty == null) throw new ArgumentException("Imóvel não encontrado");
+                if (currentProperty == null) throw new ArgumentException("Imóvel não encontrado");
 
-            currentProperty.PersonId = item.PersonId;
-            currentProperty.Hidrometer = item.Hidrometer;
-            currentProperty.Cep = item.Cep;
-            currentProperty.Street = item.Street;
-            currentProperty.Number = item.Number;
-            currentProperty.Neighborhood = item.Neighborhood;
-            currentProperty.City = item.City;
-            currentProperty.Complement = item.Complement;
-            currentProperty.CreatedAt = DateTime.Now;
+                currentProperty.Hidrometer = item.Hidrometer;
+                currentProperty.Cep = item.Cep;
+                currentProperty.Street = item.Street;
+                currentProperty.Number = item.Number;
+                currentProperty.Neighborhood = item.Neighborhood;
+                currentProperty.City = item.City;
+                currentProperty.Complement = item.Complement;
+                currentProperty.CreatedAt = DateTime.Now;
+
+                _context.ResidencialProperties.Update(currentProperty);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public Task<ResidentialProperty> InsertAsync(ResidentialProperty item)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IBaseRepository<ResidentialProperty>.UpdateAsync(ResidentialProperty item)
         {
             throw new NotImplementedException();
         }

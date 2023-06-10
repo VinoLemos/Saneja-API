@@ -60,7 +60,6 @@ namespace Application.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
-
             if (rgi == 0) return BadRequest("RGI inválido");
             try
             {
@@ -79,6 +78,7 @@ namespace Application.Controllers
         public async Task<IActionResult> RegisterProperty([FromBody] ResidentialPropertyDto obj)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
             try
             {
                 var created = await _service.Post(obj);
@@ -96,27 +96,27 @@ namespace Application.Controllers
         [Authorize(Roles = "Person")]
         [HttpPut]
         [Route("update-property")]
-        public IActionResult UpdateProperty([FromBody] ResidentialPropertyDto obj)
+        public async Task<IActionResult> UpdateProperty([FromBody] ResidentialPropertyDto obj)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var updated = _service.Put(obj);
+                var updated = await _service.Put(obj);
                 if (!updated) return BadRequest("Imóvel não atualizado");
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
         private Guid ReadUserId()
         {
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (!Guid.TryParse(userIdString, out var userId))
             {
                 throw new ArgumentException("Invalid User ID format");

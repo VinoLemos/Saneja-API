@@ -51,14 +51,14 @@ namespace Api.Service.Services.ResidencialPropertyServices
             }
         }
 
-        public bool Put(ResidentialPropertyDto residentialProperty)
+        public async Task<bool> Put(ResidentialPropertyDto residentialProperty)
         {
             try
             {
                 var currentProperty = _mapper.Map<ResidentialProperty>(residentialProperty);
-                _repository.UpdateAsync(currentProperty);
+                var updated = await _repository.UpdateAsync(currentProperty);
 
-                return true;
+                return updated ? true : false;
             }
             catch (Exception)
             {
