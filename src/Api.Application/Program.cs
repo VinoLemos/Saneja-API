@@ -9,10 +9,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var mySqlConnection = builder.Configuration.GetConnectionString("DevelopmentConnection");
+var connectionString = "";
+
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+{
+    connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+}
+else if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    connectionString = builder.Configuration.GetConnectionString("DevelopmentConnection");
+}
+else
+{
+    connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
+}
 
 ConfigureService.ConfigureDependenciesService(builder.Services);
-ConfigureRepository.ConfigureDependenciesRepository(builder.Services, mySqlConnection, "application");
+ConfigureRepository.ConfigureDependenciesRepository(builder.Services, connectionString, "application");
+
 
 builder.Services.AddControllers();
 

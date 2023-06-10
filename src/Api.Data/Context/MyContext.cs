@@ -28,7 +28,6 @@ namespace Api.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //var connectionString = "Server=localhost;Database=saneja_api_dev;Uid=root;Pwd=1234";
             var connectionString = "";
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
                 connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
