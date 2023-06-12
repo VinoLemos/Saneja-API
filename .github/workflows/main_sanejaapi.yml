@@ -47,6 +47,10 @@ jobs:
         with:
           name: .net-app
 
+      - name: Set ASPNETCORE_ENVIRONMENT to Production
+        run: |
+          echo "ASPNETCORE_ENVIRONMENT=Production" >> $GITHUB_ENV
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
