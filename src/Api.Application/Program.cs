@@ -1,5 +1,6 @@
 using Api.CrossCutting.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,19 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = "";
 
-if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-{
-    connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-}
-else if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-{
-    connectionString = builder.Configuration.GetConnectionString("DevelopmentConnection");
-}
-else
-{
-    connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
-}
-
+//if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+//{
+//    connectionString = "Server=sanejabd.mysql.database.azure.com;Port=3306;Database=saneja_api;Uid=sanejabdadmin;Pwd=SZyxbCQ!!R@PDgdH!PNFg6UEN5eqD5d&$gKdrcpDXApx@HEsT2phk^afrqBT;";
+//}
+//else if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+//{
+//    connectionString = builder.Configuration.GetConnectionString("DevelopmentConnection");
+//}
+//else
+//{
+//    connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
+//}
+connectionString = "Server=sanejabd.mysql.database.azure.com;Port=3306;Database=saneja_api;Uid=sanejabdadmin;Pwd=SZyxbCQ!!R@PDgdH!PNFg6UEN5eqD5d&$gKdrcpDXApx@HEsT2phk^afrqBT;";
 ConfigureService.ConfigureDependenciesService(builder.Services);
 ConfigureRepository.ConfigureDependenciesRepository(builder.Services, connectionString, "application");
 
