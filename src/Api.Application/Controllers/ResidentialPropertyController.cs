@@ -81,7 +81,7 @@ namespace Application.Controllers
 
             try
             {
-                var created = await _service.Post(obj);
+                var created = await _service.Post(obj, ReadUserId());
 
                 if (!created) return BadRequest("Imóvel não registrado");
 
