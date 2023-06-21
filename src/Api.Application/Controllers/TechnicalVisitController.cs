@@ -40,6 +40,25 @@ namespace Application.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("list-visit-statuses")]
+        public async Task<IActionResult> ListVisitStatuses()
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var visitStatuses = await _service.GetVisitStatuses();
+
+                return visitStatuses.Count > 0 ? Ok(visitStatuses) : NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         [Authorize(Roles = "Agent")]
         [HttpPut]
         [Route("finish-visit")]

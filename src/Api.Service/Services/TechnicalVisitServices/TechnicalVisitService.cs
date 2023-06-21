@@ -25,6 +25,24 @@ namespace Api.Service.Services.TechnicalVisitServices
             return _mapper.Map<TechnicalVisitDto>(visit);
         }
 
+        public async Task<List<VisitStatusDto>> GetVisitStatuses()
+        {
+            var statuses = await _repository.SelectStatusListAsync();
+
+            var statusList = new List<VisitStatusDto>();
+
+            statuses.ForEach(st =>
+            {
+                statusList.Add(new VisitStatusDto
+                { 
+                    Id = st.Id,
+                    Status = st.Status
+                });
+            });
+
+            return statusList;
+        }
+
         public async Task<IEnumerable<TechnicalVisitDto>> GetPendingVisits()
         {
             var visits = await _repository.SelectPendingVisits();
