@@ -24,8 +24,7 @@ var connectionString = "";
 //{
 //    connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
 //}
-//connectionString = "Server=sanejabd.mysql.database.azure.com;Port=3306;Database=saneja_api;Uid=sanejabdadmin;Pwd=SZyxbCQ!!R@PDgdH!PNFg6UEN5eqD5d&$gKdrcpDXApx@HEsT2phk^afrqBT;";
-connectionString = "server=localhost;database=saneja_api_dev;uid=root;pwd=1234";
+connectionString = "Server=sanejabd.mysql.database.azure.com;Port=3306;Database=saneja_api;Uid=sanejabdadmin;Pwd=SZyxbCQ!!R@PDgdH!PNFg6UEN5eqD5d&$gKdrcpDXApx@HEsT2phk^afrqBT;";
 ConfigureService.ConfigureDependenciesService(builder.Services);
 ConfigureRepository.ConfigureDependenciesRepository(builder.Services, connectionString, "application");
 

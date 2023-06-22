@@ -3,7 +3,6 @@ using Api.Domain.Entities;
 using Domain.Dtos;
 using Domain.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,6 @@ using Service.Services.TokenServices;
 namespace Application.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("AllowAnyOrigin")]
     [ApiController]
     public class AuthorizeController : ControllerBase
     {
