@@ -48,12 +48,22 @@ namespace Data.Repository
         public Task<TechnicalVisit> InsertAsync(TechnicalVisit item)
         {
             throw new NotImplementedException();
-;
+            ;
         }
 
-        public VisitStatus? SelectStatusById(Guid statusId)
+        public async Task<VisitStatus?> SelectStatusById(Guid statusId)
         {
-            return _context.VisitStatuses.FirstOrDefault(v => v.Id == statusId);
+            return await _context.VisitStatuses.FirstOrDefaultAsync(v => v.Id == statusId);
+        }
+
+        public User SelectUserByPropertyId(Guid id)
+        {
+            var user = (from property in _context.ResidencialProperties
+                        from u in _context.Users.Where(u => u.Id == property.PersonId)
+                        where property.Id == id
+                        select u).FirstOrDefault();
+
+            return user ?? throw new ArgumentException("Proprietário não encontrado");
         }
 
         public async Task<TechnicalVisit> SelectAsync(Guid id)
@@ -68,25 +78,25 @@ namespace Data.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<List<VisitStatus>> SelectStatusListAsync()
+        public List<VisitStatus> SelectStatusList()
         {
-            return await _context.VisitStatuses.ToListAsync();
+            return _context.VisitStatuses.ToList();
         }
 
-        public async Task<List<TechnicalVisit>> SelectAgentVisits(Guid agentId)
+        public List<TechnicalVisit> SelectAgentVisits(Guid agentId)
         {
-            var visits = await _context.TechnicalVisits.Where(t => t.UserId == agentId).ToListAsync();
+            var visits = _context.TechnicalVisits.Where(t => t.UserId == agentId).ToList();
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas para o agente informado.");
         }
 
-        public async Task<List<TechnicalVisit>> SelectPersonVisits(Guid personId)
+        public List<TechnicalVisit> SelectPersonVisits(Guid personId)
         {
-            var visits = await (from v in _context.TechnicalVisits
-                                join properties in _context.ResidencialProperties on v.ResidencialPropertyId equals properties.Id
-                                join user in _context.Users on properties.PersonId equals user.Id
-                                where user.Id == personId
-                                select v).ToListAsync();
+            var visits = (from v in _context.TechnicalVisits
+                          join properties in _context.ResidencialProperties on v.ResidencialPropertyId equals properties.Id
+                          join user in _context.Users on properties.PersonId equals user.Id
+                          where user.Id == personId
+                          select v).ToList();
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas para o agente informado.");
         }
@@ -102,32 +112,32 @@ namespace Data.Repository
             return visit ?? throw new ArgumentException("Não foi encontrada uma visita ativa para o agente informado.");
         }
 
-        public async Task<IEnumerable<TechnicalVisit>> SelectPendingVisits()
+        public IEnumerable<TechnicalVisit> SelectPendingVisits()
         {
-            var visits = await (from v in _context.TechnicalVisits
-                                from vt in _context.VisitStatuses.Where(vt => vt.Id == v.StatusId)
-                                where vt.Status == "Pending"
-                                select v).ToListAsync();
+            var visits = (from v in _context.TechnicalVisits
+                          from vt in _context.VisitStatuses.Where(vt => vt.Id == v.StatusId)
+                          where vt.Status == "Pending"
+                          select v).ToList();
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas pendentes.");
         }
 
-        public async Task<IEnumerable<TechnicalVisit>> SelectFinishedVisits()
+        public IEnumerable<TechnicalVisit> SelectFinishedVisits()
         {
-            var visits = await (from v in _context.TechnicalVisits
+            var visits = (from v in _context.TechnicalVisits
                                 from vt in _context.VisitStatuses.Where(vt => vt.Id == v.StatusId)
                                 where vt.Status == "Finished"
-                                select v).ToListAsync();
+                                select v).ToList();
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas completas.");
         }
 
-        public async Task<IEnumerable<TechnicalVisit>> SelectCanceledVisits()
+        public IEnumerable<TechnicalVisit> SelectCanceledVisits()
         {
-            var visits = await (from v in _context.TechnicalVisits
-                                from vt in _context.VisitStatuses.Where(vt => vt.Id == v.StatusId)
-                                where vt.Status == "Canceled"
-                                select v).ToListAsync();
+            var visits = (from v in _context.TechnicalVisits
+                          from vt in _context.VisitStatuses.Where(vt => vt.Id == v.StatusId)
+                          where vt.Status == "Canceled"
+                          select v).ToList();
 
             return visits ?? throw new ArgumentException("Não foram encontradas visitas canceladas.");
         }

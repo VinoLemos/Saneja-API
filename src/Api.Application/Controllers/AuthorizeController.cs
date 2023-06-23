@@ -64,7 +64,7 @@ namespace Application.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Supervisor")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Supervisor")]
         [HttpPost]
         [Route("register-agent")]
         public async Task<IActionResult> RegisterAgent([FromBody] UserCreateDto create)
@@ -90,7 +90,7 @@ namespace Application.Controllers
 
             await _userManager.AddToRoleAsync(user, "Agent");
 
-            await _signInManager.SignInAsync(user, false);
+            //await _signInManager.SignInAsync(user, false);
 
             return Ok();
         }

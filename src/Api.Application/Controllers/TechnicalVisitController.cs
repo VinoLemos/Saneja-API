@@ -24,13 +24,13 @@ namespace Application.Controllers
         [Authorize(Roles = "Agent")]
         [HttpGet]
         [Route("list-pending-visits")]
-        public async Task<IActionResult> ListPendingVisits()
+        public IActionResult ListPendingVisits()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var visits = await _service.GetPendingVisits();
+                var visits = _service.GetPendingVisits();
 
                 return visits.Count() > 0 ? Ok(visits) : BadRequest("Não foram encontradas visitas pendentes.");
             }
@@ -43,13 +43,13 @@ namespace Application.Controllers
         [Authorize]
         [HttpGet]
         [Route("list-visit-statuses")]
-        public async Task<IActionResult> ListVisitStatuses()
+        public IActionResult ListVisitStatuses()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var visitStatuses = await _service.GetVisitStatuses();
+                var visitStatuses = _service.GetVisitStatuses();
 
                 return visitStatuses.Count > 0 ? Ok(visitStatuses) : NoContent();
             }
@@ -120,13 +120,13 @@ namespace Application.Controllers
         [Authorize(Roles = "Agent")]
         [HttpGet]
         [Route("get-agent-visits")]
-        public async Task<IActionResult> GetAgentVisits()
+        public IActionResult GetAgentVisits()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var visits = await _service.GetAgentVisits(ReadUserId());
+                var visits = _service.GetAgentVisits(ReadUserId());
 
                 if (visits == null) return NoContent();
 
@@ -141,13 +141,13 @@ namespace Application.Controllers
         [Authorize(Roles = "Person")]
         [HttpGet]
         [Route("get-person-visits")]
-        public async Task<IActionResult> GetPersonVisits()
+        public IActionResult GetPersonVisits()
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var visits = await _service.GetPersonVisits(ReadUserId());
+                var visits = _service.GetPersonVisits(ReadUserId());
 
                 if (visits == null) return NoContent();
 
@@ -159,16 +159,35 @@ namespace Application.Controllers
             }
         }
 
-        [Authorize(Roles = "Agent")]
+        [Authorize]
         [HttpGet]
-        [Route("get-canceled-visits")]
-        public async Task<IActionResult> GetCanceledVisits()
+        [Route("visit-details")]
+        public async Task<IActionResult> GetVisitDetails([FromHeader]Guid visitId)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
             try
             {
-                var visits = await _service.SelectCanceledVisits();
+                var visit = await _service.GetVisitDetails(visitId);
+
+                return visit != null ? Ok(visit) : BadRequest("Visita inválida.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize(Roles = "Agent")]
+        [HttpGet]
+        [Route("get-canceled-visits")]
+        public IActionResult GetCanceledVisits()
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var visits = _service.SelectCanceledVisits();
 
                 if (visits == null) return NoContent();
 

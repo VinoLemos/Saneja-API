@@ -39,6 +39,13 @@ namespace Data.Repository
             return property ?? throw new ArgumentException("Imóvel não encontrado");
         }
 
+        public ResidentialProperty Select(Guid id)
+        {
+            var property = _context.ResidencialProperties.FirstOrDefault(r => id.Equals(r.Id));
+
+            return property ?? throw new ArgumentException("Imóvel não encontrado");
+        }
+
         public async Task<ResidentialProperty> SelectByRgi(int rgi)
         {
             var property = await _context.ResidencialProperties.FirstOrDefaultAsync(r => r.Rgi.Equals(rgi));
