@@ -238,6 +238,28 @@ namespace Application.Controllers
             }
         }
 
+        [Authorize(Roles = "Agent")]
+        [HttpPut]
+        [Route("post-return-date")]
+        public IActionResult PostReturnDate([FromBody] TechnicalVisitReturnDataDto returnData)
+        {
+            if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
+
+            try
+            {
+                var accepted = _service.PostVisitReturnDate(returnData, ReadUserId());
+
+                if (accepted == false) return BadRequest();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize(Roles = "Person")]
         [HttpPut]
         [Route("cancel-visit")]
         public async Task<IActionResult> CancelVisit([FromHeader] Guid visitId)

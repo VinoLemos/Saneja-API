@@ -22,7 +22,7 @@ var connectionString = "";
 //}
 //else
 //{
-//    connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
+//connectionString = "server=localhost;port=3306;database=saneja_api_dev;user=root;password=1234;";
 //}
 connectionString = "Server=sanejabd.mysql.database.azure.com;Port=3306;Database=saneja_api;Uid=sanejabdadmin;Pwd=SZyxbCQ!!R@PDgdH!PNFg6UEN5eqD5d&$gKdrcpDXApx@HEsT2phk^afrqBT;";
 ConfigureService.ConfigureDependenciesService(builder.Services);

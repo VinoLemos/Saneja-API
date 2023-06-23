@@ -154,12 +154,14 @@ namespace Data.Repository
                 var visit = _context.TechnicalVisits.FirstOrDefault(v => v.Id == visitId) ?? throw new ArgumentException("Visita não encontrada");
 
                 var inProgressStatus = _context.VisitStatuses.FirstOrDefault(vt => vt.Status == "In Progress") ?? throw new ArgumentException("Status não encontrado");
+                var finishedStatus = _context.VisitStatuses.FirstOrDefault(vs => vs.Status == "Finished");
 
                 if (visit.StatusId != inProgressStatus.Id) throw new ArgumentException("A visita precisa estar ativa para adicionar uma observação");
 
                 visit.Observation = observation;
                 visit.Homologated = true;
-                visit.HomologationDate = DateTime.UtcNow;
+                visit.HomologationDate = DateTime.Now;
+                visit.StatusId = finishedStatus.Id;
 
                 _context.SaveChanges();
 
@@ -169,6 +171,19 @@ namespace Data.Repository
             {
                 return false;
             }
+        }
+
+        public bool UpdateVisitReturnDate(Guid visitId, Guid agentId, DateTime returnDate)
+        {
+            var visit = _context.TechnicalVisits.FirstOrDefault(visit => visit.Id == visitId) ?? throw new ArgumentException("Visita não encontrada");
+
+            if (visit.UserId != agentId) throw new ArgumentException("Um agente só pode cancelar uma visita atribuída a ele mesmo.");
+
+            visit.ReturnDate = returnDate;
+
+            _context.SaveChanges();
+
+            return true;
         }
 
         public bool AcceptVisit(Guid visitId, Guid agentId)

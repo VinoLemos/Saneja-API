@@ -70,7 +70,9 @@ namespace Api.Service.Services.TechnicalVisitServices
                 VisitStatus = statuses.FirstOrDefault(v => v.Id == visit.StatusId).Status,
                 Property = propertyDto,
                 VisitRequestDate = visit.VisitDate,
-                HomologationDate = visit.UpdatedAt != DateTime.MinValue? visit.UpdatedAt : null,
+                Homologated = visit.Homologated,
+                HomologationDate = visit.HomologationDate != DateTime.MinValue ? visit.HomologationDate : null,
+                Observation = !string.IsNullOrEmpty(visit.Observation) ? visit.Observation : "",
                 ReturnDate = visit.ReturnDate != DateTime.MinValue? visit.ReturnDate : null
             };
         }
@@ -194,6 +196,22 @@ namespace Api.Service.Services.TechnicalVisitServices
             try
             {
                 var posted = _repository.UpdateVisitObservation(observation.VisitId, observation.Observation);
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+
+        public bool PostVisitReturnDate(TechnicalVisitReturnDataDto returnData, Guid agentId)
+        {
+            try
+            {
+                if (returnData.ReturnDate < DateTime.Now) throw new ArgumentException("A data de retorno precisa ser maior que a data atual.");
+
+                var registeredReturn = _repository.UpdateVisitReturnDate(returnData.VisitId, agentId, returnData.ReturnDate);
 
                 return true;
             }
