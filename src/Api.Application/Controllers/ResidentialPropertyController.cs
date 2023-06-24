@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Application.Controllers
 {
-    [Authorize("Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ResidentialPropertyController : ControllerBase

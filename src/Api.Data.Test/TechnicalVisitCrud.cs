@@ -106,7 +106,7 @@ namespace Api.Data.Test
                 Neighborhood = "Teste",
                 Number = Faker.RandomNumber.Next(),
                 UF = "SP",
-                Rgi = 1111111111,
+                Rgi = "1111111111",
                 Hidrometer = 1111111111,
                 PersonId = dummyPersonId
             };
@@ -129,7 +129,7 @@ namespace Api.Data.Test
             var createdVisit = await _repository.InsertAsync(dummyVisit);
             Assert.NotNull(createdVisit);
             // Retrieving Pending
-            var pendingVisits = await _repository.SelectPendingVisits();
+            var pendingVisits = _repository.SelectPendingVisits();
             Assert.NotNull(pendingVisits);
 
             // Updating - Agent accepting visit
