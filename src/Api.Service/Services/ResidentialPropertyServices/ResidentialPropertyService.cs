@@ -22,9 +22,9 @@ namespace Api.Service.Services.ResidencialPropertyServices
             return _mapper.Map<ResidentialPropertyDto>(property);
         }
 
-        public async Task<ResidentialProperty> GetByRgi(int? rgi)
+        public async Task<ResidentialProperty> GetByRgi(string? rgi)
         {
-            return await _repository.SelectByRgi((int)rgi);
+            return await _repository.SelectByRgi(rgi);
         }
 
         public async Task<List<ResidentialPropertyDto>> GetUserProperties(Guid userId)

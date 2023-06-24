@@ -48,7 +48,7 @@ namespace Api.Data.Test
                 Cep = 11713300,
                 City = "City",
                 UF = "SP",
-                Rgi = 321425678,
+                Rgi = "321425678",
                 Hidrometer = 21345678
             };
 
@@ -74,7 +74,7 @@ namespace Api.Data.Test
             propertyCreated.Cep = 11111111;
             propertyCreated.City = "Updated City";
             propertyCreated.UF = "AA";
-            propertyCreated.Rgi = 321425679;
+            propertyCreated.Rgi = "321425679";
             propertyCreated.Hidrometer = 21345678;
             _repository.UpdateAsync(propertyCreated);
             var propertyUpdated = await _repository.SelectAsync(property.Id);

@@ -25,11 +25,19 @@ namespace Data.Repository
 
         public async Task<ResidentialProperty> InsertAsync(ResidentialProperty item, Guid id)
         {
-            item.PersonId = id;
-            await _context.ResidencialProperties.AddAsync(item);
-            await _context.SaveChangesAsync();
+            try
+            {
+                item.PersonId = id;
+                item.CreatedAt = DateTime.Now;
+                await _context.ResidencialProperties.AddAsync(item);
+                await _context.SaveChangesAsync();
 
-            return item;
+                return item;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<ResidentialProperty> SelectAsync(Guid id)
@@ -46,7 +54,7 @@ namespace Data.Repository
             return property ?? throw new ArgumentException("Imóvel não encontrado");
         }
 
-        public async Task<ResidentialProperty> SelectByRgi(int rgi)
+        public async Task<ResidentialProperty> SelectByRgi(string rgi)
         {
             var property = await _context.ResidencialProperties.FirstOrDefaultAsync(r => r.Rgi.Equals(rgi));
 

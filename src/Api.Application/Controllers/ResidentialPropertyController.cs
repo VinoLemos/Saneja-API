@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Application.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize("Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ResidentialPropertyController : ControllerBase
@@ -56,11 +56,11 @@ namespace Application.Controllers
 
         [HttpGet]
         [Route("get-property-by-rgi")]
-        public async Task<IActionResult> GetByRgi([FromHeader] int rgi)
+        public async Task<IActionResult> GetByRgi([FromQuery] string rgi)
         {
             if (!ModelState.IsValid) return BadRequest(modelStateError + ModelState);
 
-            if (rgi == 0) return BadRequest("RGI inválido");
+            if (string.IsNullOrEmpty(rgi)) return BadRequest("RGI inválido");
             try
             {
                 var imovel = await _service.GetByRgi(rgi);

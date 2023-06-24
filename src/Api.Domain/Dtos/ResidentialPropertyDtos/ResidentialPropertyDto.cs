@@ -10,7 +10,7 @@
         public int? Cep { get; set; }
         public string City { get; set; }
         public string UF { get; set; }
-        public int Rgi { get; set; }
+        public string Rgi { get; set; }
         public int Hidrometer { get; set; }
     }
 }
